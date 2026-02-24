@@ -1,0 +1,78 @@
+{
+    "data": [
+        {
+            "id": 3,
+            "status": "submitted",
+            "name": "MD SAJID HASAN",
+            "identifier": "+8801797321185",
+            "display_id": "UMT3KZDLP6",
+            "account_number": null,
+            "branch_code": "181",
+            "banking_type": "conventional",
+            "last_submission_at": "2026-02-24T09:07:02.000000Z",
+            "gender": "female",
+            "product_type": "green_savings_account",
+            "retry_application": true
+        },
+        {
+            "id": 2,
+            "status": "submitted",
+            "name": "MD SAJID HASAN",
+            "identifier": "+8801797321185",
+            "display_id": "UMT22UMFMH",
+            "account_number": null,
+            "branch_code": "181",
+            "banking_type": "conventional",
+            "last_submission_at": "2026-02-24T08:36:49.000000Z",
+            "gender": "female",
+            "product_type": "green_savings_account",
+            "retry_application": true
+        },
+        {
+            "id": 1,
+            "status": "submitted",
+            "name": "MD SAJID HASAN",
+            "identifier": "+8801797321185",
+            "display_id": "UMTZL939YW",
+            "account_number": null,
+            "branch_code": "181",
+            "banking_type": "conventional",
+            "last_submission_at": "2026-02-24T08:33:19.000000Z",
+            "gender": "female",
+            "product_type": "green_savings_account",
+            "retry_application": true
+        }
+    ],
+    "links": {
+        "first": "http://city-api.dev-polygontech.xyz/api/admin/applications?page=1",
+        "last": "http://city-api.dev-polygontech.xyz/api/admin/applications?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "links": [
+            {
+                "url": null,
+                "label": "&laquo; Previous",
+                "active": false
+            },
+            {
+                "url": "http://city-api.dev-polygontech.xyz/api/admin/applications?page=1",
+                "label": "1",
+                "active": true
+            },
+            {
+                "url": null,
+                "label": "Next &raquo;",
+                "active": false
+            }
+        ],
+        "path": "http://city-api.dev-polygontech.xyz/api/admin/applications",
+        "per_page": 20,
+        "to": 3,
+        "total": 3
+    }
+}

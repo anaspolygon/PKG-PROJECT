@@ -1,0 +1,15 @@
+# Ignore all of .next except necessary folders (for standalone build)
+.next/*
+!.next/standalone
+!.next/static
+
+# Ignore dependencies and system files
+node_modules
+npm-debug.log
+yarn-error.log
+.env
+*.log
+.DS_Store
+yarn.lock
+pnpm-lock.yaml
+

@@ -1,0 +1,10 @@
+FROM node:20-buster-slim
+
+WORKDIR /app
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
+RUN npm i --legacy-peer-deps
+COPY . .
+
+EXPOSE 3000
+CMD ["npm", "run", "dev"]

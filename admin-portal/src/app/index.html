@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>reCAPTCHA v3 Demo</title>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LdqNh8rAAAAAKkDPQRijHX82PWN3TMQq6bVE3nu"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        flex-direction: column;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 5px;
+        border-radius: 10px;
+      }
+      button:hover{
+        background: #037c5e;
+        transition: 0.3s;
+      }
+
+      #token-container {
+        margin-top: 20px;
+        border-radius: 50px;
+
+        display: none;
+        flex-direction: column;
+        align-items: center;
+      }
+      #token-display {
+        width: 1040px;
+        word-wrap: break-word;
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        background-color: #5e5e5e;
+        color: rgb(10, 112, 78);
+      }
+      .copy-message {
+        color: green;
+        margin-top: 5px;
+        font-size: 14px;
+        height: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Poysha reCAPTCHA v3 Demo</h2>
+    <p>Click the button to generate a reCAPTCHA token</p>
+    <button id="action-button">Generate reCAPTCHA Token</button>
+    
+    <div id="token-container">
+      <div>Generated Token:</div>
+      <div id="token-display"></div>
+      <button id="copy-button">Copy Poysha</button>
+      <div class="copy-message" id="copy-message"></div>
+    </div>
+
+    <script>
+      // Your reCAPTCHA site key (use your own in production)
+      const SITE_KEY = "6LdqNh8rAAAAAKkDPQRijHX82PWN3TMQq6bVE3nu";
+      let currentToken = '';
+
+      // Initialize reCAPTCHA
+      grecaptcha.ready(function () {
+        // Execute reCAPTCHA on button click
+        document
+          .getElementById("action-button")
+          .addEventListener("click", function () {
+            grecaptcha
+              .execute(SITE_KEY, { action: "submit" })
+              .then(function (token) {
+                currentToken = token;
+                
+                // Display the token and show the copy button
+                document.getElementById("token-display").textContent = token;
+                document.getElementById("token-container").style.display = "flex";
+              });
+          });
+          
+        // Copy token to clipboard
+        document.getElementById("copy-button").addEventListener("click", function() {
+          navigator.clipboard.writeText(currentToken).then(function() {
+            document.getElementById("copy-message").textContent = "Token copied to clipboard!";
+            setTimeout(function() {
+              document.getElementById("copy-message").textContent = "";
+            }, 2000);
+          }, function() {
+            document.getElementById("copy-message").textContent = "Failed to copy token";
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
