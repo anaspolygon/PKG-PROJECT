@@ -8,13 +8,8 @@ type SearchBarProps = {
   placeholder?: string;
   label?: string;
   error?: string;
-  onChange?: (val: string) => void; // ✅ new
+  onChange?: (val: string) => void;
 };
-
-// const isValidBdMobile = (input: string) => {
-//   const bdMobileRegex = /^01[3-9]\d{8}$/;
-//   return bdMobileRegex.test(input);
-// };
 
 const SearchBar: React.FC<SearchBarProps> = ({
   searchValue,
@@ -32,29 +27,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
     setValue(inputValue);
     setIsLengthValid(inputValue.length > 0);
-    setWarning(""); // clear local warnings on input
+    setWarning("");
     onChange?.(inputValue);
-
-    //  if ([11, 13, 14].includes(inputValue.length)) {
-    //   if (isValidBdMobile(inputValue)) {
-    //     setWarning("");
-    //     setIsLengthValid(true);
-    //   } else {
-    //     setWarning("Please enter a valid Bangladesh mobile number.");
-    //     setIsLengthValid(false);
-    //   }
-    // } else {
-    //   setWarning("");
-    // }
   };
 
   const handleSubmit = () => {
-    // if (isValidBdMobile(value)) {
-    //   setWarning("");
     onSubmit(value);
-    // } else {
-    //   setWarning("Please enter a valid Bangladesh mobile number.");
-    // }
   };
 
   const handleClear = () => {

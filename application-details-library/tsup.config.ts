@@ -9,7 +9,7 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   clean: true,
-  external: ["react", "react-dom", "antd", "lucide-react", "clsx","next"],
+  external: ["react", "react-dom", "antd", "lucide-react", "clsx","next","react-select"],
   banner: {
     js: '"use client";',
   },

@@ -20,44 +20,14 @@ import {
 import { formatDateWithTime } from "@/utils/date";
 import { Tooltip } from "antd";
 import { Eye } from "lucide-react";
-import Table from "@/components/ui/table";
-import { toast } from "sonner";
+import Table from "./table";
 interface ApplicationTableProps {
   canDownloadPdf: boolean;
   data: Application[];
-  selectedIds: number[];
-  toggleSelect: (id: number) => void;
 }
 
-const ApplicationTable = ({
-  canDownloadPdf,
-  data,
-  selectedIds,
-  toggleSelect,
-}: ApplicationTableProps) => {
+const ApplicationTable = ({ data }: ApplicationTableProps) => {
   const columns = [
-    ...(canDownloadPdf
-      ? [
-          {
-            title: "Select",
-            key: "id" as keyof Application,
-            render: (_: any, record: Application) => (
-              <input
-                type="checkbox"
-                className="cursor-pointer"
-                checked={selectedIds.includes(record.id)}
-                onChange={() => {
-                  if(record.status === "in_progress"){
-                    toast.warning("This application is currently in progress,the application can’t be selected.");
-                    return;
-                  }
-                  toggleSelect(record.id)
-                }}
-              />
-            ),
-          },
-        ]
-      : []),
     {
       title: "Display ID",
       key: "display_id" as keyof Application,
@@ -90,7 +60,7 @@ const ApplicationTable = ({
           className={clsx(
             "px-2 py-1 rounded-md text-xs font-medium inline-block text-center",
             BankTypeBgColors[record.banking_type?.toLowerCase() as BankType],
-            BankTypeTextColors[record.banking_type?.toLowerCase() as BankType]
+            BankTypeTextColors[record.banking_type?.toLowerCase() as BankType],
           )}
         >
           {getBankingType(record.banking_type) ?? (
@@ -127,7 +97,7 @@ const ApplicationTable = ({
               ],
               ApplicationStatusTextColors[
                 record.status.toLowerCase() as ApplicationStatus
-              ]
+              ],
             )}
           >
             {getApplicationStatus(record.status)}
@@ -146,7 +116,7 @@ const ApplicationTable = ({
       render: (_: any, record: Application) => {
         if (
           ["submitted", "cbs_failed", "in_progress"].includes(
-            record.status.toLowerCase()
+            record.status.toLowerCase(),
           )
         ) {
           return (

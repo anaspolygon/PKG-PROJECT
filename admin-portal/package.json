@@ -9,16 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@your-org/application-details": "file:../application-details-library",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@hookform/resolvers": "^5.2.2",
     "@material-tailwind/react": "^2.1.10",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
+    "@parcel/watcher": "^2.5.6",
     "@radix-ui/react-slot": "^1.2.4",
     "@szhsin/react-accordion": "^1.4.1",
-    "@parcel/watcher": "^2.5.6",
+    "@your-org/application-details": "file:../application-details-library",
     "antd": "^5.24.8",
     "browser-image-compression": "^2.0.2",
     "class-variance-authority": "^0.7.1",
@@ -66,7 +66,6 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    
     "@tailwindcss/postcss": "^4.1.18",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20",
