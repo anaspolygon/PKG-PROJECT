@@ -10,7 +10,7 @@ export default function ApplicationDetailsWapper() {
     const fetchApplication = async () => {
       try {
         const res = await fetch(
-          "https://city-api.dev-polygontech.xyz/api/application/1",
+          "https://city-api.dev-polygontech.xyz/api/application/4",
           {
             method: "GET",
             headers: {
