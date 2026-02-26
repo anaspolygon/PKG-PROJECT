@@ -14,7 +14,10 @@ export default async function ApplicationDetailsPage({
       </div>
       <hr className="text-gray-300 py-2" />
       <div className="flex flex-col gap-4">
-        <ApplicationDetailsWapper url={url} apiKey={process.env.NEXT_API_KEY} />
+        <ApplicationDetailsWapper
+          url={url}
+          apiKey={process.env.NEXT_API_KEY as string}
+        />
       </div>
     </div>
   );
