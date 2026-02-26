@@ -1,11 +1,9 @@
-import React from "react";
-import ApplicationSection from "./components/ApplicationSection";
+import { ApplicationSection } from "@your-org/application-details";
 
 const page = () => {
-  const key = Math.random().toString();
   return (
     <div className="flex flex-col gap-8">
-      <ApplicationSection key={key} />
+      <ApplicationSection />
     </div>
   );
 };
