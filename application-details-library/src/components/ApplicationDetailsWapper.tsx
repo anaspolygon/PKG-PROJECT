@@ -1,42 +1,42 @@
 "use client";
 import { useEffect, useState } from "react";
 import ApplicationDetails from "./ApplicationDetails";
+import Loader from "./Loader";
 
-export default function ApplicationDetailsWapper() {
+interface ApplicationDetailsWrapperProps {
+  url: string;
+  apiKey: string;
+}
+
+export default function ApplicationDetailsWapper({
+  url,
+  apiKey,
+}: ApplicationDetailsWrapperProps) {
   const [application, setApplication] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchApplication = async () => {
       try {
-        const res = await fetch(
-          "https://city-api.dev-polygontech.xyz/api/application/4",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "x-api-key":
-                "mangeD01axB3sBDM3HwRmh2MmO4hQ5aXyXpCLOwp8QRYKymrgyCaaFwJciTgWqzz",
-            },
+        const res = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": apiKey,
           },
-        );
+        });
         const data = await res.json();
-        console.log("Fetched application data:", data);
         setApplication(data);
       } catch (error) {
-        console.log(
-          "Error fetching application:",
-          (error as any)?.message || error,
-        );
         console.error("Error fetching application:", error);
       } finally {
         setLoading(false);
       }
     };
     fetchApplication();
-  }, []);
+  }, [url,apiKey]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
   return (
     <ApplicationDetails
       application={application}

@@ -9,12 +9,19 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   clean: true,
-  external: ["react", "react-dom", "antd", "lucide-react", "clsx","next","react-select"],
+  external: [
+    "react",
+    "react-dom",
+    "antd",
+    "lucide-react",
+    "clsx",
+    "next",
+    "react-select",
+  ],
   banner: {
     js: '"use client";',
   },
   onSuccess: async () => {
-    // Copy CSS file to dist
     try {
       mkdirSync("dist", { recursive: true });
       copyFileSync(
