@@ -7,14 +7,14 @@ import { AddressData } from "./Address";
 
 export interface ApplicationDetailsProps {
   application: ApplicationDetailsRoot;
-  addressData?: AddressData;
+  preloadKey?: string;
   title?: string;
   showTitle?: boolean;
 }
 
 const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({
   application,
-  addressData,
+  preloadKey,
   title = "Application Details",
   showTitle = true,
 }) => {
@@ -34,7 +34,7 @@ const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({
         <CollapsibleSectionsContainer
           application={application}
           nidNo={nidNo}
-          addressData={addressData}
+          preloadKey={preloadKey}
         />
       </div>
     </div>

@@ -17,7 +17,7 @@ import { CircleCheckBig, CircleX } from "lucide-react";
 export interface CollapsibleSectionsContainerProps {
   application: ApplicationDetailsRoot;
   nidNo?: string;
-  addressData?: AddressData;
+  preloadKey?: string;
 }
 
 export function downloadDocument(name: string, blob: Blob) {
@@ -33,9 +33,12 @@ export function downloadDocument(name: string, blob: Blob) {
 
 const CollapsibleSectionsContainer: React.FC<
   CollapsibleSectionsContainerProps
-> = ({ application, addressData }) => {
+> = ({ application, preloadKey }) => {
   const getValue = (field: Field) => {
-    if (["dropdown", "radio"].includes(field.input_type as string)) {
+    if (
+      ["dropdown", "radio"].includes(field.input_type as string) &&
+      (field.possible_values ?? []).length > 0
+    ) {
       return field.possible_values?.find(
         (option) => option.value === field.value,
       )?.label;
@@ -101,7 +104,7 @@ const CollapsibleSectionsContainer: React.FC<
         item.section_slug === "nid" ? (
           <Images images={item.value} />
         ) : item.section_slug === "address_information" ? (
-          <Address fields={item.fields} addressData={addressData} />
+          <Address fields={item.fields} preloadKey={preloadKey} />
         ) : (
           <FormSection
             fields={item.fields}

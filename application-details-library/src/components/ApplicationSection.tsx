@@ -51,8 +51,6 @@ const ApplicationSection = ({ url, apiKey }: Props) => {
     label: item.label,
   }));
 
-  console.log("Applications data:", applications);
-
   return (
     <div>
       <div className="flex items-center justify-between">

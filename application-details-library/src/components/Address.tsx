@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import FormSection from "./FormSection";
+import { useAddress } from "../hooks/useAddress";
 
 export interface AddressData {
   divisions?: Array<{ label: string; value: string }>;
@@ -12,37 +13,35 @@ export interface AddressData {
 export interface AddressProps {
   fields: any[];
   addressData?: AddressData;
+  preloadKey?: string;
 }
 
-export default function Address({ fields, addressData }: AddressProps) {
+export default function Address({ fields, addressData, preloadKey }: AddressProps) {
+  const { divisions, districts, thanas, postal_codes } = useAddress(preloadKey);
   const getValue = (field: any) => {
-    if (!addressData) return field.value;
+    
 
     if (field.slug.includes("division")) {
-      return (
-        addressData.divisions?.find(
-          (option: any) => option.value === field.value
+     
+      return (divisions?.find(
+          (option: any) => option.value === field.value,
         )?.label || field.value
       );
     }
     if (field.slug.includes("district")) {
-      return (
-        addressData.districts?.find(
-          (option: any) => option.value === field.value
+      return (districts?.find(
+          (option: any) => option.value === field.value,
         )?.label || field.value
       );
     }
     if (field.slug.includes("thana")) {
-      return (
-        addressData.thanas?.find(
-          (option: any) => option.value === field.value
-        )?.label || field.value
+      return (thanas?.find((option: any) => option.value === field.value)
+          ?.label || field.value
       );
     }
     if (field.slug.includes("postal_code")) {
-      return (
-        addressData.postal_codes?.find(
-          (option: any) => option.value === field.value
+      return (postal_codes?.find(
+          (option: any) => option.value === field.value,
         )?.label || field.value
       );
     }
@@ -70,11 +69,11 @@ export default function Address({ fields, addressData }: AddressProps) {
         "permanent_address",
         "present_address",
         "same_as_present_address",
-      ].includes(field.slug)
+      ].includes(field.slug),
   );
 
   const sameAsPresentAddressField = fields.find(
-    (item) => item.slug === "same_as_present_address"
+    (item) => item.slug === "same_as_present_address",
   );
   const sameAsPresentAddressFieldValue = sameAsPresentAddressField?.value;
   const isSameAsPresentAddress = (
