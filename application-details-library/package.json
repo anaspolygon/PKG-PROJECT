@@ -1,5 +1,5 @@
 {
-  "name": "@your-org/application-details",
+  "name": "@polygontech/application-details",
   "version": "1.0.0",
   "description": "A reusable ApplicationDetails component for Next.js applications",
   "main": "dist/index.js",

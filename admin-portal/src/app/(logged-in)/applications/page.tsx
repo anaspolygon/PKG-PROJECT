@@ -1,4 +1,5 @@
-import { ApplicationSection } from "@your-org/application-details";
+import { ApplicationSection } from "@polygontech/application-details";
+
 
 const page = () => {
   return (

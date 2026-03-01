@@ -1,5 +1,5 @@
+import { ApplicationDetailsWapper } from "@polygontech/application-details";
 import React from "react";
-import { ApplicationDetailsWapper } from "@your-org/application-details";
 
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
