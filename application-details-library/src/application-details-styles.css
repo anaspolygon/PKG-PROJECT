@@ -10,7 +10,7 @@
   );
 }
 
-@theme {
+/* @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -35,7 +35,7 @@
   --color-blue: #094e9e;
   --text-tiny: 1rem;
   --text-tiny--font-weight: 500;
-}
+} */
 .password-hidden {
   -webkit-text-security: disc;
 }
