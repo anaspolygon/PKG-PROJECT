@@ -6,7 +6,12 @@ import { ApplicationList } from "../types/ApplicationTypes";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 
-const useGetApplicationList = (page: number, url: string, apiKey: string) => {
+const useGetApplicationList = (
+  page: number,
+  url: string,
+  preloadUrl: string,
+  apiKey: string,
+) => {
   const today = dayjs().format("YYYY-MM-DD");
   const sixMonthsAgo = dayjs().subtract(6, "month").format("YYYY-MM-DD");
   const [data, setData] = useState<ApplicationList | null>(null);
@@ -56,6 +61,29 @@ const useGetApplicationList = (page: number, url: string, apiKey: string) => {
       console.error("Error fetching application:", error);
     } finally {
       setLoading(false);
+    }
+
+    try {
+      const res = await fetch(preloadUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": apiKey,
+        },
+      });
+      const preload = await res.json();
+      const localPreload = JSON.parse(
+        localStorage.getItem("preload") as string,
+      );
+      if (localPreload.version !== preload.version) {
+        localStorage.removeItem("preload");
+        localStorage.setItem("preload", JSON.stringify(preload));
+      }
+      if (!localPreload) {
+        localStorage.setItem("preload", JSON.stringify(preload));
+      }
+    } catch (error) {
+      console.error("Error fetching application:", error);
     }
   }, [
     page,
