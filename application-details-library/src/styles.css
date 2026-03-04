@@ -1,0 +1,212 @@
+@import "tailwindcss";
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --color-primary-bg: linear-gradient(
+    to bottom right,
+    #750000,
+    #460101,
+    #111111
+  );
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-roboto: "Roboto", sans-serif;
+  --font-poppins: var(--font-poppins);
+  --font-inter: var(--font-inter);
+  --font-satoshi: var(--font-satoshi);
+  --font-open-sans: var(--font-open-sans);
+  --color-primary-bg: var(--color-primary-bg);
+  --color-primary: #ed1c24;
+  --color-primary-hover: #c7151a;
+  --color-secondary: #d3d3d3;
+  --color-primary-btn: #ed1c24;
+  --color-border-grey: #b1b1b1;
+  --color-lightblack: #1a1d1b;
+  --color-tinyblack: #7a828a;
+  --color-darkblack: #000000;
+  --color-green: #065b05;
+  --color-grey: #7c7e7f;
+  --color-lightgrey: #909090;
+  --color-blue: #094e9e;
+  --text-tiny: 1rem;
+  --text-tiny--font-weight: 500;
+}
+.password-hidden {
+  -webkit-text-security: disc;
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+/* body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+} */
+
+/* .font-roboto {
+  font-family: var(--font-roboto)
+} */
+
+.font-sathoshi {
+  font-family: var(--font-satoshi);
+}
+
+.font-open-sans {
+  font-family: var(--font-open-sans);
+}
+
+body {
+  font-family: var(--font-open-sans);
+}
+
+@layer utilities {
+  .no-spinner::-webkit-inner-spin-button,
+  .no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .no-spinner {
+    -moz-appearance: textfield;
+  }
+
+  /* Custom thin scrollbar styles */
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+  }
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
+.ant-picker-input > input[disabled] {
+  color: #000 !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #000 !important;
+}
+
+.ant-collapse > .ant-collapse-item {
+  margin-bottom: 16px !important;
+  border: 1px solid #d2d2d2 !important;
+  padding: 5px !important;
+}
+
+.ant-collapse > .ant-collapse-item:last-child {
+  margin-bottom: 0 !important;
+}
+
+.ant-collapse > .ant-collapse-item {
+  border-radius: 8px !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+.ant-collapse {
+  border: none !important;
+  background: transparent !important;
+}
+
+.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  border-radius: 8px 8px 0 0 !important;
+}
+
+.ant-collapse
+  > .ant-collapse-item:not(.ant-collapse-item-active)
+  > .ant-collapse-header {
+  border-radius: 8px !important;
+}
+
+.ant-collapse-header-text {
+  font-size: 18px !important;
+  font-weight: 500 !important;
+}
+
+/* Risk Grading Collapse Styles */
+.risk-grading-collapse .ant-collapse-item {
+  border-bottom: 1px solid #e5e7eb !important;
+  border-radius: 0 !important;
+}
+
+.risk-grading-collapse .ant-collapse-header {
+  padding: 20px 24px !important;
+  background: transparent !important;
+  transition: all 0.2s ease;
+}
+
+.risk-grading-collapse .ant-collapse-item:hover .ant-collapse-header {
+  background: #f9fafb !important;
+}
+
+.risk-grading-collapse .ant-collapse-item-active .ant-collapse-header {
+  background: #f3f4f6 !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+.risk-grading-collapse .ant-collapse-content {
+  background-color: #ffffff !important;
+  border-top: none !important;
+}
+
+.risk-grading-collapse .ant-collapse-content-box {
+  padding: 20px 24px !important;
+}
+
+.risk-grading-collapse .ant-collapse > .ant-collapse-item:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Sidebar Badge Hover Styles */
+.group:hover .ant-badge .ant-badge-count {
+  background-color: #ffffff !important;
+  color: #e20001 !important;
+}
+
+/* Sidebar Badge Component Class */
+.sidebar-badge .ant-badge-count {
+  transition: all 0.2s ease-in-out;
+}
+
+.sidebar-badge-active .ant-badge-count {
+  background-color: #ffffff !important;
+  color: #e20001 !important;
+}
+
+.sidebar-badge-inactive .ant-badge-count {
+  background-color: #e20001 !important;
+  color: #ffffff !important;
+}
+
+.group:hover .sidebar-badge-inactive .ant-badge-count {
+  background-color: #ffffff !important;
+  color: #e20001 !important;
+}
