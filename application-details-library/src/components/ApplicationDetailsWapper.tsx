@@ -4,13 +4,15 @@ import ApplicationDetails from "./ApplicationDetails";
 import Loader from "./Loader";
 
 interface ApplicationDetailsWrapperProps {
-  url: string;
-  preloadUrl: string;
-  apiKey: string;
+  id?: string | number;
+  url?: string;
+  preloadUrl?: string;
   preloadKey?: string;
+  apiKey: string;
 }
 
 export default function ApplicationDetailsWapper({
+  id,
   url,
   preloadUrl,
   apiKey,
@@ -19,10 +21,16 @@ export default function ApplicationDetailsWapper({
   const [application, setApplication] = useState({});
   const [loading, setLoading] = useState(true);
 
+  const defaultUrl = `${process.env.NEXT_PUBLIC_API_ADMIN_BASE_URL}/api/application/${id}`;
+  const defaultPreloadUrl = `${process.env.NEXT_PUBLIC_API_ADMIN_BASE_URL}/api/preload-data`;
+
+  const apiUrl = url || defaultUrl;
+  const apiPreload = preloadUrl || defaultPreloadUrl;
+
   useEffect(() => {
     const fetchApplication = async () => {
       try {
-        const res = await fetch(url, {
+        const res = await fetch(apiUrl, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -43,7 +51,7 @@ export default function ApplicationDetailsWapper({
   useEffect(() => {
     const callPreloadApi = async () => {
       try {
-        const res = await fetch(preloadUrl, {
+        const res = await fetch(apiPreload, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
