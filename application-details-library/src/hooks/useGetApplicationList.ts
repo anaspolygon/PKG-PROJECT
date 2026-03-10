@@ -8,9 +8,8 @@ import dayjs from "dayjs";
 
 const useGetApplicationList = (
   page: number,
-  url: string,
-  preloadUrl: string,
   apiKey: string,
+  url?: string,
 ) => {
   const today = dayjs().format("YYYY-MM-DD");
   const sixMonthsAgo = dayjs().subtract(6, "month").format("YYYY-MM-DD");
@@ -46,9 +45,10 @@ const useGetApplicationList = (
     if (status) params.append("status", status);
     if (gender) params.append("gender", gender);
     if (productType) params.append("product_type", productType);
-
+    const defaultUrl = `${process.env.NEXT_PUBLIC_API_ADMIN_BASE_URL}/api/admin/applications`;
+    const api = url ?? defaultUrl;
     try {
-      const res = await fetch(url + "?" + params.toString(), {
+      const res = await fetch(api + "?" + params.toString(), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -63,28 +63,28 @@ const useGetApplicationList = (
       setLoading(false);
     }
 
-    try {
-      const res = await fetch(preloadUrl, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": apiKey,
-        },
-      });
-      const preload = await res.json();
-      const localPreload = JSON.parse(
-        localStorage.getItem("preload") as string,
-      );
-      if (localPreload.version !== preload.version) {
-        localStorage.removeItem("preload");
-        localStorage.setItem("preload", JSON.stringify(preload));
-      }
-      if (!localPreload) {
-        localStorage.setItem("preload", JSON.stringify(preload));
-      }
-    } catch (error) {
-      console.error("Error fetching application:", error);
-    }
+    // try {
+    //   const res = await fetch(preloadUrl, {
+    //     method: "GET",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "x-api-key": apiKey,
+    //     },
+    //   });
+    //   const preload = await res.json();
+    //   const localPreload = JSON.parse(
+    //     localStorage.getItem("preload") as string,
+    //   );
+    //   if (localPreload.version !== preload.version) {
+    //     localStorage.removeItem("preload");
+    //     localStorage.setItem("preload", JSON.stringify(preload));
+    //   }
+    //   if (!localPreload) {
+    //     localStorage.setItem("preload", JSON.stringify(preload));
+    //   }
+    // } catch (error) {
+    //   console.error("Error fetching application:", error);
+    // }
   }, [
     page,
     identifier,

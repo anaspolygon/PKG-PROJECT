@@ -11,11 +11,10 @@ import useGetApplicationList from "../hooks/useGetApplicationList";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { selectStyles } from "./FormSelect";
 interface Props {
-  url: string;
-  preloadUrl: string;
   apiKey: string;
+  url?: string;
 }
-const ApplicationSection = ({ url, preloadUrl, apiKey }: Props) => {
+const ApplicationSection = ({ apiKey, url }: Props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const {
     error,
@@ -39,7 +38,7 @@ const ApplicationSection = ({ url, preloadUrl, apiKey }: Props) => {
     setSearchTerm,
     setProductType,
     setBankingType,
-  } = useGetApplicationList(currentPage, url, preloadUrl, apiKey);
+  } = useGetApplicationList(currentPage, apiKey, url);
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
