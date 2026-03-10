@@ -57,7 +57,7 @@ export default function ApplicationDetailsWapper({
       }
     };
     fetchApplication();
-  }, [url, apiKey]);
+  }, [url, apiKey, apiUrl]);
 
   useEffect(() => {
     const callPreloadApi = async () => {
@@ -73,7 +73,8 @@ export default function ApplicationDetailsWapper({
         const localPreload = JSON.parse(
           localStorage.getItem("preload") as string,
         );
-        if (localPreload.version !== preload.version) {
+
+        if (localPreload && localPreload.version !== preload.version) {
           localStorage.removeItem("preload");
           localStorage.setItem("preload", JSON.stringify(preload));
         }
@@ -85,7 +86,7 @@ export default function ApplicationDetailsWapper({
       }
     };
     callPreloadApi();
-  }, [preloadUrl, apiKey]);
+  }, [preloadUrl, apiKey, apiPreload]);
 
   if (loading) return <Loader />;
   return (

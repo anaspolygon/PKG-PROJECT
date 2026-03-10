@@ -6,11 +6,7 @@ import { ApplicationList } from "../types/ApplicationTypes";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 
-const useGetApplicationList = (
-  page: number,
-  apiKey: string,
-  url?: string,
-) => {
+const useGetApplicationList = (page: number, apiKey: string, url?: string) => {
   const today = dayjs().format("YYYY-MM-DD");
   const sixMonthsAgo = dayjs().subtract(6, "month").format("YYYY-MM-DD");
   const [data, setData] = useState<ApplicationList | null>(null);
