@@ -4,6 +4,8 @@ import { getNidNo } from "../helpers/ApplicationDetailsHelper";
 import CollapsibleSectionsContainer from "./CollapsibleSection";
 import { ApplicationDetailsRoot } from "../types/ApplicationDetailsType";
 import { AddressData } from "./Address";
+import { Button } from "./button";
+import PrimaryBtn from "./PrimaryBtn";
 
 export interface ApplicationDetailsProps {
   application: ApplicationDetailsRoot;
@@ -37,6 +39,7 @@ const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({
           preloadKey={preloadKey}
         />
       </div>
+     
     </div>
   );
 };

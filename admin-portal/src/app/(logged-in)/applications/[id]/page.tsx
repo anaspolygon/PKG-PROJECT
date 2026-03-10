@@ -7,8 +7,10 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const preloadUrl = `${process.env.NEXT_API_ADMIN_BASE_URL}/api/preload-data`;
   return (
     <ApplicationDetailsWapper
-      url={url}
-      preloadUrl={preloadUrl}
+      // url={url}
+      // preloadUrl={preloadUrl}
+      id={id}
+      showActionsBtn
       apiKey={process.env.NEXT_API_KEY as string}
     />
   );

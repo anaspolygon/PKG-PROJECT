@@ -2,12 +2,18 @@
 import { useEffect, useState } from "react";
 import ApplicationDetails from "./ApplicationDetails";
 import Loader from "./Loader";
+import PrimaryBtn from "./PrimaryBtn";
 
 interface ApplicationDetailsWrapperProps {
   id?: string | number;
   url?: string;
   preloadUrl?: string;
   preloadKey?: string;
+  showActionsBtn?: boolean;
+  loadingApprove?: boolean;
+  loadingReject?: boolean;
+  handleApprove?: () => void;
+  handleReject?: () => void;
   apiKey: string;
 }
 
@@ -15,8 +21,13 @@ export default function ApplicationDetailsWapper({
   id,
   url,
   preloadUrl,
-  apiKey,
   preloadKey,
+  showActionsBtn,
+  loadingApprove,
+  loadingReject,
+  handleApprove,
+  handleReject,
+  apiKey,
 }: ApplicationDetailsWrapperProps) {
   const [application, setApplication] = useState({});
   const [loading, setLoading] = useState(true);
@@ -78,11 +89,33 @@ export default function ApplicationDetailsWapper({
 
   if (loading) return <Loader />;
   return (
-    <ApplicationDetails
-      application={application}
-      preloadKey={preloadKey}
-      title="Application Details"
-      showTitle={false}
-    />
+    <>
+      <ApplicationDetails
+        application={application}
+        preloadKey={preloadKey}
+        title="Application Details"
+        showTitle={false}
+      />
+      <div className="flex mt-5 justify-end items-center gap-2">
+        {showActionsBtn ? (
+          <>
+            <PrimaryBtn
+              onClick={handleApprove}
+              variant="success"
+              content="Approve"
+              loadingAll={loadingApprove as boolean}
+              loadingContent={"Approving..."}
+            />
+            <PrimaryBtn
+              onClick={handleReject}
+              variant="danger"
+              content="Reject"
+              loadingAll={loadingApprove as boolean}
+              loadingContent={"Rejecting..."}
+            />
+          </>
+        ) : null}
+      </div>
+    </>
   );
 }
