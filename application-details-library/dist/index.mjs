@@ -608,10 +608,10 @@ var CollapsibleSectionsContainer = ({ application, preloadKey }) => {
     return value ? value.split("_").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ") : null;
   };
   return /* @__PURE__ */ jsxs5(Fragment3, { children: [
-    /* @__PURE__ */ jsx5("div", { className: "bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-2", children: /* @__PURE__ */ jsxs5("div", { className: "flex flex-col lg:flex-row gap-6 w-full", children: [
-      /* @__PURE__ */ jsxs5("div", { className: "flex flex-col gap-4", children: [
-        /* @__PURE__ */ jsxs5("div", { className: "flex gap-4", children: [
-          /* @__PURE__ */ jsxs5("div", { className: "shrink-0", children: [
+    /* @__PURE__ */ jsx5("div", { className: "bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-2", children: /* @__PURE__ */ jsxs5("div", { className: "flex flex-col 2xl:flex-row 2xl:gap-6", children: [
+      /* @__PURE__ */ jsxs5("div", { className: "flex flex-col gap-4 2xl:w-auto 2xl:shrink-0", children: [
+        /* @__PURE__ */ jsxs5("div", { className: "flex flex-row gap-4 justify-center 2xl:justify-start", children: [
+          /* @__PURE__ */ jsxs5("div", { className: "flex flex-col items-center gap-2", children: [
             /* @__PURE__ */ jsxs5("div", { className: "relative", children: [
               /* @__PURE__ */ jsx5(
                 Image2,
@@ -620,7 +620,7 @@ var CollapsibleSectionsContainer = ({ application, preloadKey }) => {
                   height: 280,
                   src: application.additional_info?.user_image,
                   alt: "user image",
-                  className: "rounded-lg border-2 border-gray-100"
+                  className: "rounded-lg border-2 border-gray-100 w-35 h-35 sm:w-50 sm:h-50 2xl:w-70 2xl:h-70 object-cover"
                 }
               ),
               /* @__PURE__ */ jsx5("div", { className: "absolute -bottom-2 -right-2 bg-white rounded-full p-2 shadow-md border border-gray-200", children: /* @__PURE__ */ jsx5(
@@ -642,7 +642,7 @@ var CollapsibleSectionsContainer = ({ application, preloadKey }) => {
             ] }),
             /* @__PURE__ */ jsx5("h2", { className: "text-sm font-semibold text-gray-700 uppercase tracking-wide text-center", children: "User Image" })
           ] }),
-          /* @__PURE__ */ jsxs5("div", { className: "flex-shrink-0", children: [
+          /* @__PURE__ */ jsxs5("div", { className: "flex flex-col items-center gap-2", children: [
             /* @__PURE__ */ jsxs5("div", { className: "relative", children: [
               /* @__PURE__ */ jsx5(
                 Image2,
@@ -651,7 +651,7 @@ var CollapsibleSectionsContainer = ({ application, preloadKey }) => {
                   height: 280,
                   src: application.additional_info?.ec_user_image,
                   alt: "ec image",
-                  className: "rounded-lg border-2 border-gray-100"
+                  className: "rounded-lg border-2 border-gray-100 w-35 h-35 sm:w-50 sm:h-50 2xl:w-70 2xl:h-70 object-cover"
                 }
               ),
               /* @__PURE__ */ jsx5("div", { className: "absolute -bottom-2 -right-2 bg-white rounded-full p-2 shadow-md border border-gray-200", children: /* @__PURE__ */ jsx5(
@@ -671,13 +671,13 @@ var CollapsibleSectionsContainer = ({ application, preloadKey }) => {
                 }
               ) })
             ] }),
-            /* @__PURE__ */ jsx5("h2", { className: "text-sm font-semibold text-gray-700 uppercase tracking-wide text-center", children: "Ec Image" })
+            /* @__PURE__ */ jsx5("h2", { className: "text-sm font-semibold text-gray-700 uppercase tracking-wide text-center", children: "EC Image" })
           ] })
         ] }),
         /* @__PURE__ */ jsxs5("div", { className: "flex flex-col bg-gray-50 rounded-lg p-4 border border-gray-200", children: [
           /* @__PURE__ */ jsx5("span", { className: "text-xs font-medium text-gray-500 uppercase tracking-wide mb-2", children: "Face Match Score" }),
           /* @__PURE__ */ jsxs5("div", { className: "flex items-center gap-3", children: [
-            /* @__PURE__ */ jsxs5("span", { className: "text-sm font-bold text-blue-600 min-w-[45px]", children: [
+            /* @__PURE__ */ jsxs5("span", { className: "text-sm font-bold text-blue-600 min-w-11.25", children: [
               application.additional_info?.face_match_percentage,
               "%"
             ] }),
@@ -700,36 +700,40 @@ var CollapsibleSectionsContainer = ({ application, preloadKey }) => {
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ jsxs5("div", { className: "flex-1 min-w-0", children: [
+      /* @__PURE__ */ jsxs5("div", { className: "flex-1 min-w-0 mt-6 2xl:mt-0", children: [
         /* @__PURE__ */ jsx5("h3", { className: "text-lg font-bold text-gray-900 mb-4 pb-3 border-b border-gray-200", children: "Application Information" }),
-        /* @__PURE__ */ jsxs5("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-6", children: [
+        /* @__PURE__ */ jsxs5("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6", children: [
           /* @__PURE__ */ jsxs5("div", { className: "space-y-4", children: [
             /* @__PURE__ */ jsxs5("div", { className: "flex flex-col", children: [
-              /* @__PURE__ */ jsx5("span", { className: "text-xs font-medium text-gray-500 uppercase tracking-wide mb-1", children: "Application ID" }),
-              /* @__PURE__ */ jsx5("span", { className: "text-sm font-semibold text-gray-900", children: application.additional_info?.application_display_id })
+              /* @__PURE__ */ jsx5("span", { className: "text-xs font-medium text-gray-500 uppercase tracking-wide mb-1", children: "Display ID" }),
+              /* @__PURE__ */ jsx5("span", { className: "text-sm font-semibold text-gray-900", children: application.additional_info?.application_display_id ?? "N/A" })
+            ] }),
+            /* @__PURE__ */ jsxs5("div", { className: "flex flex-col", children: [
+              /* @__PURE__ */ jsx5("span", { className: "text-xs font-medium text-gray-500 uppercase tracking-wide mb-1", children: "Account No" }),
+              /* @__PURE__ */ jsx5("span", { className: "text-sm font-semibold text-gray-900", children: application.additional_info?.account_no ?? "N/A" })
             ] }),
             /* @__PURE__ */ jsxs5("div", { className: "flex flex-col", children: [
               /* @__PURE__ */ jsx5("span", { className: "text-xs font-medium text-gray-500 uppercase tracking-wide mb-1", children: "Name" }),
-              /* @__PURE__ */ jsx5("span", { className: "text-sm font-semibold text-gray-900", children: application.additional_info?.name })
+              /* @__PURE__ */ jsx5("span", { className: "text-sm font-semibold text-gray-900", children: application.additional_info?.name ?? "N/A" })
             ] }),
             /* @__PURE__ */ jsxs5("div", { className: "flex flex-col", children: [
               /* @__PURE__ */ jsx5("span", { className: "text-xs font-medium text-gray-500 uppercase tracking-wide mb-1", children: "Gender" }),
-              /* @__PURE__ */ jsx5("span", { className: "text-sm font-semibold text-gray-900 capitalize", children: application.additional_info?.gender })
+              /* @__PURE__ */ jsx5("span", { className: "text-sm font-semibold text-gray-900 capitalize", children: application.additional_info?.gender ?? "N/A" })
             ] }),
             /* @__PURE__ */ jsxs5("div", { className: "flex flex-col", children: [
-              /* @__PURE__ */ jsx5("span", { className: "text-xs font-medium text-gray-500 uppercase tracking-wide mb-1", children: "Date of birth" }),
-              /* @__PURE__ */ jsx5("span", { className: "text-sm font-semibold text-gray-900", children: application.additional_info?.dob })
+              /* @__PURE__ */ jsx5("span", { className: "text-xs font-medium text-gray-500 uppercase tracking-wide mb-1", children: "Date of Birth" }),
+              /* @__PURE__ */ jsx5("span", { className: "text-sm font-semibold text-gray-900", children: application.additional_info?.dob ?? "N/A" })
             ] }),
             /* @__PURE__ */ jsxs5("div", { className: "flex flex-col", children: [
               /* @__PURE__ */ jsx5("span", { className: "text-xs font-medium text-gray-500 uppercase tracking-wide mb-1", children: "Mobile" }),
-              /* @__PURE__ */ jsx5("span", { className: "text-sm font-semibold text-gray-900", children: application.additional_info?.mobile })
-            ] }),
-            /* @__PURE__ */ jsxs5("div", { className: "flex flex-col", children: [
-              /* @__PURE__ */ jsx5("span", { className: "text-xs font-medium text-gray-500 uppercase tracking-wide mb-1", children: "NID No" }),
-              /* @__PURE__ */ jsx5("span", { className: "text-sm font-semibold text-gray-900", children: application.additional_info?.nid_no })
+              /* @__PURE__ */ jsx5("span", { className: "text-sm font-semibold text-gray-900", children: application.additional_info?.mobile ?? "N/A" })
             ] })
           ] }),
           /* @__PURE__ */ jsxs5("div", { className: "space-y-4", children: [
+            /* @__PURE__ */ jsxs5("div", { className: "flex flex-col", children: [
+              /* @__PURE__ */ jsx5("span", { className: "text-xs font-medium text-gray-500 uppercase tracking-wide mb-1", children: "NID No" }),
+              /* @__PURE__ */ jsx5("span", { className: "text-sm font-semibold text-gray-900", children: application.additional_info?.nid_no ?? "N/A" })
+            ] }),
             /* @__PURE__ */ jsxs5("div", { className: "flex flex-col", children: [
               /* @__PURE__ */ jsx5("span", { className: "text-xs font-medium text-gray-500 uppercase tracking-wide mb-1", children: "Branch Name" }),
               /* @__PURE__ */ jsx5("span", { className: "text-sm font-semibold text-gray-900 capitalize", children: application.additional_info?.branch_name ?? "N/A" })

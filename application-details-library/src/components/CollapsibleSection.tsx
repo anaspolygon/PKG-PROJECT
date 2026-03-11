@@ -126,7 +126,7 @@ const CollapsibleSectionsContainer: React.FC<
   return (
     <>
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-2">
-        <div className="flex flex-col lg:flex-row gap-6 w-full">
+        {/* <div className="flex flex-col lg:flex-row gap-6 w-full">
           <div className="flex flex-col gap-4">
             <div className="flex gap-4">
               <div className="shrink-0">
@@ -338,6 +338,238 @@ const CollapsibleSectionsContainer: React.FC<
                   </div>
                 </div>
 
+                <div className="flex flex-col">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                    Submitted At
+                  </span>
+                  <span className="text-sm font-semibold text-gray-900">
+                    {application.additional_info?.first_submitted_at ?? "N/A"}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> */}
+        <div className="flex flex-col 2xl:flex-row 2xl:gap-6">
+          {/* LEFT SECTION: Images + Face Match (full width below 1440, left col above) */}
+          <div className="flex flex-col gap-4 2xl:w-auto 2xl:shrink-0">
+            {/* Images Row */}
+            <div className="flex flex-row gap-4 justify-center 2xl:justify-start">
+              {/* User Image */}
+              <div className="flex flex-col items-center gap-2">
+                <div className="relative">
+                  <Image
+                    width={280}
+                    height={280}
+                    src={application.additional_info?.user_image}
+                    alt="user image"
+                    className="rounded-lg border-2 border-gray-100 w-35 h-35 sm:w-50 sm:h-50 2xl:w-70 2xl:h-70 object-cover"
+                  />
+                  <div className="absolute -bottom-2 -right-2 bg-white rounded-full p-2 shadow-md border border-gray-200">
+                    <svg
+                      className="w-5 h-5 text-blue-600"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide text-center">
+                  User Image
+                </h2>
+              </div>
+
+              {/* EC Image */}
+              <div className="flex flex-col items-center gap-2">
+                <div className="relative">
+                  <Image
+                    width={280}
+                    height={280}
+                    src={application.additional_info?.ec_user_image}
+                    alt="ec image"
+                    className="rounded-lg border-2 border-gray-100 w-35 h-35 sm:w-50 sm:h-50 2xl:w-70 2xl:h-70 object-cover"
+                  />
+                  <div className="absolute -bottom-2 -right-2 bg-white rounded-full p-2 shadow-md border border-gray-200">
+                    <svg
+                      className="w-5 h-5 text-blue-600"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide text-center">
+                  EC Image
+                </h2>
+              </div>
+            </div>
+
+            {/* Face Match Score */}
+            <div className="flex flex-col bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+                Face Match Score
+              </span>
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-bold text-blue-600 min-w-11.25">
+                  {application.additional_info?.face_match_percentage}%
+                </span>
+                <div className="flex-1">
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className={clsx(
+                        "h-2 rounded-full transition-all duration-300",
+                        Number(
+                          application.additional_info?.face_match_percentage,
+                        ) >= 80
+                          ? "bg-green-500"
+                          : Number(
+                                application.additional_info
+                                  ?.face_match_percentage,
+                              ) >= 60
+                            ? "bg-yellow-500"
+                            : "bg-red-500",
+                      )}
+                      style={{
+                        width: `${application.additional_info?.face_match_percentage}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT SECTION: Application Info (full width below 1440, right col above) */}
+          <div className="flex-1 min-w-0 mt-6 2xl:mt-0">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 pb-3 border-b border-gray-200">
+              Application Information
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              {/* Column 1 */}
+              <div className="space-y-4">
+                <div className="flex flex-col">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                    Display ID
+                  </span>
+                  <span className="text-sm font-semibold text-gray-900">
+                    {application.additional_info?.application_display_id ??
+                      "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                    Account No
+                  </span>
+                  <span className="text-sm font-semibold text-gray-900">
+                    {application.additional_info?.account_no ?? "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                    Name
+                  </span>
+                  <span className="text-sm font-semibold text-gray-900">
+                    {application.additional_info?.name ?? "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                    Gender
+                  </span>
+                  <span className="text-sm font-semibold text-gray-900 capitalize">
+                    {application.additional_info?.gender ?? "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                    Date of Birth
+                  </span>
+                  <span className="text-sm font-semibold text-gray-900">
+                    {application.additional_info?.dob ?? "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                    Mobile
+                  </span>
+                  <span className="text-sm font-semibold text-gray-900">
+                    {application.additional_info?.mobile ?? "N/A"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Column 2 */}
+              <div className="space-y-4">
+                <div className="flex flex-col">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                    NID No
+                  </span>
+                  <span className="text-sm font-semibold text-gray-900">
+                    {application.additional_info?.nid_no ?? "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                    Branch Name
+                  </span>
+                  <span className="text-sm font-semibold text-gray-900 capitalize">
+                    {application.additional_info?.branch_name ?? "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                    Banking Type
+                  </span>
+                  <span className="text-sm font-semibold text-gray-900 capitalize">
+                    {application.additional_info?.banking_type ?? "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                    Product Type
+                  </span>
+                  <span className="text-sm font-semibold text-gray-900 capitalize">
+                    {formatValue(
+                      application.additional_info?.product_type ?? "N/A",
+                    )}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                    Application Status
+                  </span>
+                  <div>
+                    <span
+                      className={clsx(
+                        "inline-flex px-3 py-1 rounded-full text-xs font-semibold",
+                        ApplicationStatusBgColors[
+                          application.additional_info
+                            ?.application_status as unknown as ApplicationStatus
+                        ],
+                        ApplicationStatusTextColors[
+                          application.additional_info
+                            ?.application_status as unknown as ApplicationStatus
+                        ],
+                      )}
+                    >
+                      {getApplicationStatus(
+                        application.additional_info
+                          ?.application_status as unknown as ApplicationStatus,
+                      )}
+                    </span>
+                  </div>
+                </div>
                 <div className="flex flex-col">
                   <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
                     Submitted At

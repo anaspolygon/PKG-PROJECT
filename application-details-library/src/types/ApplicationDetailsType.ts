@@ -399,6 +399,7 @@ export interface AdditionalInfo {
   application_display_id: string;
   first_submitted_at: string;
   mobile: string;
+  account_no: string | number;
   name: string;
   business_name?: any;
   nid_no?: any;
