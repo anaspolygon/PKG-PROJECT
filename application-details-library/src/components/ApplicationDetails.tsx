@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Loader from "./Loader";
 import PrimaryBtn from "./PrimaryBtn";
 import ApplicationDetailsContainer from "./ApplicationDetailsContainer";
+import { ApplicationDetailsProvider } from "./ApplicationDetailsProvider";
 
 interface ApplicationDetailsProps {
   id: string | number;
@@ -23,6 +24,8 @@ export default function ApplicationDetails({
   const [pdfDownloadloading, setPdfDownloadLoading] = useState(false);
   const [documentsDownloadLoading, setDocumentsDownloadLoading] =
     useState(false);
+  const [approveloading, setApproveLoading] = useState(false);
+  const [rejectloading, setRejectLoading] = useState(false);
 
   const detailsUrl = `${baseUrl}/api/application/${id}`;
   const preloadUrl = `${baseUrl}/api/preload-data`;
@@ -143,6 +146,11 @@ export default function ApplicationDetails({
         cache: "no-store",
       });
 
+      if (res.status == 401) {
+        window.location.reload();
+        return;
+      }
+
       if (!res.ok) {
         const text = await res.text();
         return;
@@ -163,9 +171,76 @@ export default function ApplicationDetails({
     }
   };
 
+  const handleApprove = async () => {
+    try {
+      setApproveLoading(true);
+      const approveUrl = `${baseUrl}/api/admin/applications/${id}/approve`;
+      const res = await fetch(approveUrl, {
+        method: "POST",
+        headers: {
+          "x-api-key": apiKey,
+        },
+        cache: "no-store",
+      });
+
+      if (res.status == 401) {
+        window.location.reload();
+        return;
+      }
+      if (res.ok) {
+        const data = await res.json();
+        toast.success(data.message);
+      }
+
+      if (!res.ok) {
+        const text = await res.text();
+        toast.error(text);
+        return;
+      }
+    } catch (e: any) {
+      console.error("error:", e);
+    } finally {
+      setApproveLoading(false);
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      setRejectLoading(true);
+      const approveUrl = `${baseUrl}/api/admin/applications/${id}/reject`;
+      const res = await fetch(approveUrl, {
+        method: "POST",
+        headers: {
+          "x-api-key": apiKey,
+        },
+        cache: "no-store",
+      });
+
+      if (res.status == 401) {
+        window.location.reload();
+        return;
+      }
+      if (res.ok) {
+        const data = await res.json();
+        toast.success(data.message);
+      }
+
+      if (!res.ok) {
+        const text = await res.text();
+        toast.error(text);
+        return;
+      }
+    } catch (e: any) {
+      console.error("error:", e);
+    } finally {
+      setRejectLoading(false);
+    }
+  };
+
   if (loading) return <Loader />;
   return (
     <>
+      <ApplicationDetailsProvider />
       <div className="flex justify-between items-center pb-4">
         <h1 className="text-2xl font-bold">Application Details</h1>
         <div className="flex items-center gap-4">
@@ -201,17 +276,17 @@ export default function ApplicationDetails({
         {showActionsBtn ? (
           <>
             <PrimaryBtn
-              onClick={() => {}}
+              onClick={handleApprove}
               variant="success"
               content="Approve"
-              loadingAll={false}
+              loadingAll={approveloading}
               loadingContent={"Approving..."}
             />
             <PrimaryBtn
-              onClick={() => {}}
+              onClick={handleReject}
               variant="danger"
               content="Reject"
-              loadingAll={false}
+              loadingAll={rejectloading}
               loadingContent={"Rejecting..."}
             />
           </>

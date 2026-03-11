@@ -101,7 +101,7 @@ __export(index_exports, {
 module.exports = __toCommonJS(index_exports);
 
 // src/components/ApplicationDetails.tsx
-var import_sonner = require("sonner");
+var import_sonner2 = require("sonner");
 var import_react2 = require("react");
 
 // src/components/Loader.tsx
@@ -1010,8 +1010,15 @@ var ApplicationDetailsContainer = ({
 };
 var ApplicationDetailsContainer_default = ApplicationDetailsContainer;
 
-// src/components/ApplicationDetails.tsx
+// src/components/ApplicationDetailsProvider.tsx
+var import_sonner = require("sonner");
 var import_jsx_runtime7 = require("react/jsx-runtime");
+function ApplicationDetailsProvider() {
+  return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(import_sonner.Toaster, { richColors: true, position: "top-right" });
+}
+
+// src/components/ApplicationDetails.tsx
+var import_jsx_runtime8 = require("react/jsx-runtime");
 function ApplicationDetails({
   id,
   baseUrl,
@@ -1022,6 +1029,8 @@ function ApplicationDetails({
   const [loading, setLoading] = (0, import_react2.useState)(true);
   const [pdfDownloadloading, setPdfDownloadLoading] = (0, import_react2.useState)(false);
   const [documentsDownloadLoading, setDocumentsDownloadLoading] = (0, import_react2.useState)(false);
+  const [approveloading, setApproveLoading] = (0, import_react2.useState)(false);
+  const [rejectloading, setRejectLoading] = (0, import_react2.useState)(false);
   const detailsUrl = `${baseUrl}/api/application/${id}`;
   const preloadUrl = `${baseUrl}/api/preload-data`;
   (0, import_react2.useEffect)(() => {
@@ -1092,7 +1101,7 @@ function ApplicationDetails({
       });
       if (res.status === 202) {
         const data = await res.json();
-        import_sonner.toast.success(data.message);
+        import_sonner2.toast.success(data.message);
         return;
       }
       if (res.status == 401) {
@@ -1130,6 +1139,10 @@ function ApplicationDetails({
         },
         cache: "no-store"
       });
+      if (res.status == 401) {
+        window.location.reload();
+        return;
+      }
       if (!res.ok) {
         const text = await res.text();
         return;
@@ -1149,12 +1162,73 @@ function ApplicationDetails({
       setDocumentsDownloadLoading(false);
     }
   };
-  if (loading) return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Loader_default, {});
-  return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex justify-between items-center pb-4", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h1", { className: "text-2xl font-bold", children: "Application Details" }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "flex items-center gap-4", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+  const handleApprove = async () => {
+    try {
+      setApproveLoading(true);
+      const approveUrl = `${baseUrl}/api/admin/applications/${id}/approve`;
+      const res = await fetch(approveUrl, {
+        method: "POST",
+        headers: {
+          "x-api-key": apiKey
+        },
+        cache: "no-store"
+      });
+      if (res.status == 401) {
+        window.location.reload();
+        return;
+      }
+      if (res.ok) {
+        const data = await res.json();
+        import_sonner2.toast.success(data.message);
+      }
+      if (!res.ok) {
+        const text = await res.text();
+        import_sonner2.toast.error(text);
+        return;
+      }
+    } catch (e) {
+      console.error("error:", e);
+    } finally {
+      setApproveLoading(false);
+    }
+  };
+  const handleReject = async () => {
+    try {
+      setRejectLoading(true);
+      const approveUrl = `${baseUrl}/api/admin/applications/${id}/reject`;
+      const res = await fetch(approveUrl, {
+        method: "POST",
+        headers: {
+          "x-api-key": apiKey
+        },
+        cache: "no-store"
+      });
+      if (res.status == 401) {
+        window.location.reload();
+        return;
+      }
+      if (res.ok) {
+        const data = await res.json();
+        import_sonner2.toast.success(data.message);
+      }
+      if (!res.ok) {
+        const text = await res.text();
+        import_sonner2.toast.error(text);
+        return;
+      }
+    } catch (e) {
+      console.error("error:", e);
+    } finally {
+      setRejectLoading(false);
+    }
+  };
+  if (loading) return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Loader_default, {});
+  return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(ApplicationDetailsProvider, {}),
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "flex justify-between items-center pb-4", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h1", { className: "text-2xl font-bold", children: "Application Details" }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "flex items-center gap-4", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
           PrimaryBtn_default,
           {
             variant: "secondary",
@@ -1166,7 +1240,7 @@ function ApplicationDetails({
             loadingContent: "Downloading..."
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
           PrimaryBtn_default,
           {
             variant: "primary",
@@ -1180,7 +1254,7 @@ function ApplicationDetails({
         )
       ] }) })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
       ApplicationDetailsContainer_default,
       {
         application,
@@ -1188,26 +1262,24 @@ function ApplicationDetails({
         showTitle: false
       }
     ),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "flex mt-5 justify-end items-center gap-2", children: showActionsBtn ? /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "flex mt-5 justify-end items-center gap-2", children: showActionsBtn ? /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
         PrimaryBtn_default,
         {
-          onClick: () => {
-          },
+          onClick: handleApprove,
           variant: "success",
           content: "Approve",
-          loadingAll: false,
+          loadingAll: approveloading,
           loadingContent: "Approving..."
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
         PrimaryBtn_default,
         {
-          onClick: () => {
-          },
+          onClick: handleReject,
           variant: "danger",
           content: "Reject",
-          loadingAll: false,
+          loadingAll: rejectloading,
           loadingContent: "Rejecting..."
         }
       )
@@ -1225,10 +1297,10 @@ var import_antd3 = require("antd");
 var import_lucide_react3 = require("lucide-react");
 
 // src/components/table.tsx
-var import_jsx_runtime8 = require("react/jsx-runtime");
+var import_jsx_runtime9 = require("react/jsx-runtime");
 var Table = ({ columns, dataSource }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(import_jsx_runtime8.Fragment, { children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "overflow-auto h-[calc(100vh-285px)] border border-gray-200 rounded-lg", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("table", { className: "min-w-full table-auto border-collapse", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("thead", { className: "text-gray-400 sticky top-0 bg-white z-10", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("tr", { children: columns.map((heading, index) => /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_jsx_runtime9.Fragment, { children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: "overflow-auto h-[calc(100vh-285px)] border border-gray-200 rounded-lg", children: /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("table", { className: "min-w-full table-auto border-collapse", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("thead", { className: "text-gray-400 sticky top-0 bg-white z-10", children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("tr", { children: columns.map((heading, index) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
       "th",
       {
         className: "px-4 py-4 text-left text-sm font-medium text-gray-500 capitalize border-b border-gray-200",
@@ -1236,7 +1308,7 @@ var Table = ({ columns, dataSource }) => {
       },
       index
     )) }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("tbody", { children: dataSource.map((data, index) => /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("tbody", { children: dataSource.map((data, index) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
       "tr",
       {
         className: "border-b border-gray-300 border-dashed hover:bg-gray-50 ",
@@ -1244,7 +1316,7 @@ var Table = ({ columns, dataSource }) => {
           if (!header || !data) return null;
           const value = data[header.key];
           const hasRender = typeof header.render === "function";
-          return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("td", { className: `px-4 py-4 text-sm text-gray-700`, children: hasRender ? header.render?.(value, data) : value !== null && value !== void 0 && value !== "" ? String(value) : "N/A" }, key);
+          return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("td", { className: `px-4 py-4 text-sm text-gray-700`, children: hasRender ? header.render?.(value, data) : value !== null && value !== void 0 && value !== "" ? String(value) : "N/A" }, key);
         })
       },
       index
@@ -1346,7 +1418,7 @@ var BankTypeTextColors = {
 };
 
 // src/components/ApplicationTable.tsx
-var import_jsx_runtime9 = require("react/jsx-runtime");
+var import_jsx_runtime10 = require("react/jsx-runtime");
 var ApplicationTable = ({ data }) => {
   const columns = [
     {
@@ -1373,7 +1445,7 @@ var ApplicationTable = ({ data }) => {
     {
       title: "Banking Type",
       key: "banking_type",
-      render: (_, record) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+      render: (_, record) => /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
         "span",
         {
           className: (0, import_clsx2.default)(
@@ -1381,7 +1453,7 @@ var ApplicationTable = ({ data }) => {
             BankTypeBgColors[record.banking_type?.toLowerCase()],
             BankTypeTextColors[record.banking_type?.toLowerCase()]
           ),
-          children: getBankingType(record.banking_type) ?? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: "text-gray-700 text-sm font-normal", children: "N/A" })
+          children: getBankingType(record.banking_type) ?? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "text-gray-700 text-sm font-normal", children: "N/A" })
         }
       )
     },
@@ -1397,7 +1469,7 @@ var ApplicationTable = ({ data }) => {
     {
       title: "Application Status",
       key: "status",
-      render: (_, record) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_antd3.Tooltip, { placement: "top", title: record.failed_reason, children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+      render: (_, record) => /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_antd3.Tooltip, { placement: "top", title: record.failed_reason, children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
         "span",
         {
           className: (0, import_clsx2.default)(
@@ -1421,17 +1493,17 @@ var ApplicationTable = ({ data }) => {
         if (["submitted", "cbs_failed", "in_progress"].includes(
           record.status.toLowerCase()
         )) {
-          return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: "flex gap-3  items-center", children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className: "flex gap-3  items-center", children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
             "a",
             {
               className: "px-2 py-2 bg-purple-100 text-purple-500 hover:bg-purple-400 hover:text-white rounded-md shadow flex items-center cursor-pointer transition-all duration-300 ease-in-out",
               href: `/applications/${record.id}`,
-              children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+              children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                 "button",
                 {
                   className: "transform cursor-pointer",
                   title: "Application Details",
-                  children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_lucide_react3.Eye, { className: "w-4 h-4" })
+                  children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_lucide_react3.Eye, { className: "w-4 h-4" })
                 }
               )
             }
@@ -1441,7 +1513,7 @@ var ApplicationTable = ({ data }) => {
       }
     }
   ];
-  return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(table_default, { columns, dataSource: data });
+  return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(table_default, { columns, dataSource: data });
 };
 var ApplicationTable_default = ApplicationTable;
 
@@ -1449,7 +1521,7 @@ var ApplicationTable_default = ApplicationTable;
 var import_react3 = require("react");
 var import_antd4 = require("antd");
 var import_lucide_react4 = require("lucide-react");
-var import_jsx_runtime10 = require("react/jsx-runtime");
+var import_jsx_runtime11 = require("react/jsx-runtime");
 var SearchBar = ({
   searchValue,
   onSubmit,
@@ -1476,9 +1548,9 @@ var SearchBar = ({
     setIsLengthValid(false);
     onSubmit("");
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "flex flex-col gap-1 min-w-[250px] sm:text-[12px] lg:text-sm", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "relative", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "flex flex-col gap-1 min-w-[250px] sm:text-[12px] lg:text-sm", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "relative", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
         import_antd4.Input,
         {
           value,
@@ -1488,17 +1560,17 @@ var SearchBar = ({
           onPressEnter: handleSubmit
         }
       ),
-      value && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+      value && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
         "button",
         {
           onClick: handleClear,
           className: "absolute right-9 top-1/2 -translate-y-1/2 px-1 py-1 text-gray-500 hover:text-red-500 cursor-pointer sm:text-[12px] lg:text-sm",
           "aria-label": "Clear search",
           type: "button",
-          children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_lucide_react4.X, { size: 16 })
+          children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_lucide_react4.X, { size: 16 })
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
         "button",
         {
           onClick: handleSubmit,
@@ -1506,12 +1578,12 @@ var SearchBar = ({
           "aria-label": "Submit search",
           type: "button",
           disabled: !isLengthValid,
-          children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_lucide_react4.Search, { size: 18 })
+          children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_lucide_react4.Search, { size: 18 })
         }
       )
     ] }),
-    warning && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "text-red-600 text-xs mt-1", children: warning }),
-    error && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "text-red-600 text-sm", children: error })
+    warning && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "text-red-600 text-xs mt-1", children: warning }),
+    error && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "text-red-600 text-sm", children: error })
   ] });
 };
 var SearchBar_default = SearchBar;
@@ -1519,7 +1591,7 @@ var SearchBar_default = SearchBar;
 // src/components/DateFilter.tsx
 var import_antd5 = require("antd");
 var import_dayjs = __toESM(require("dayjs"));
-var import_jsx_runtime11 = require("react/jsx-runtime");
+var import_jsx_runtime12 = require("react/jsx-runtime");
 var { RangePicker } = import_antd5.DatePicker;
 var DateFilter = ({
   startDate,
@@ -1533,7 +1605,7 @@ var DateFilter = ({
     const sixMonthsAgo = (0, import_dayjs.default)().subtract(6, "month").startOf("day");
     return current.isBefore(sixMonthsAgo);
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
     RangePicker,
     {
       value,
@@ -1607,7 +1679,7 @@ var React2 = __toESM(require("react"));
 var import_react_slot = require("@radix-ui/react-slot");
 var import_class_variance_authority = require("class-variance-authority");
 var import_classnames2 = __toESM(require_classnames());
-var import_jsx_runtime12 = require("react/jsx-runtime");
+var import_jsx_runtime13 = require("react/jsx-runtime");
 var buttonVariants = (0, import_class_variance_authority.cva)(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
@@ -1636,7 +1708,7 @@ var buttonVariants = (0, import_class_variance_authority.cva)(
 var Button = React2.forwardRef(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? import_react_slot.Slot : "button";
-    return /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
       Comp,
       {
         className: (0, import_classnames2.default)(buttonVariants({ variant, size, className })),
@@ -1649,8 +1721,8 @@ var Button = React2.forwardRef(
 Button.displayName = "Button";
 
 // src/components/pagination.tsx
-var import_jsx_runtime13 = require("react/jsx-runtime");
-var Pagination = ({ className, ...props }) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+var import_jsx_runtime14 = require("react/jsx-runtime");
+var Pagination = ({ className, ...props }) => /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
   "nav",
   {
     role: "navigation",
@@ -1660,7 +1732,7 @@ var Pagination = ({ className, ...props }) => /* @__PURE__ */ (0, import_jsx_run
   }
 );
 Pagination.displayName = "Pagination";
-var PaginationContent = React3.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+var PaginationContent = React3.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
   "ul",
   {
     ref,
@@ -1669,14 +1741,14 @@ var PaginationContent = React3.forwardRef(({ className, ...props }, ref) => /* @
   }
 ));
 PaginationContent.displayName = "PaginationContent";
-var PaginationItem = React3.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("li", { ref, className: (0, import_classnames3.default)("", className), ...props }));
+var PaginationItem = React3.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("li", { ref, className: (0, import_classnames3.default)("", className), ...props }));
 PaginationItem.displayName = "PaginationItem";
 var PaginationLink = ({
   className,
   isActive,
   size = "icon",
   ...props
-}) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+}) => /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
   "a",
   {
     "aria-current": isActive ? "page" : void 0,
@@ -1696,7 +1768,7 @@ PaginationLink.displayName = "PaginationLink";
 var PaginationPrevious = ({
   className,
   ...props
-}) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
+}) => /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
   PaginationLink,
   {
     "aria-label": "Go to previous page",
@@ -1708,8 +1780,8 @@ var PaginationPrevious = ({
     ),
     ...props,
     children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_lucide_react5.ChevronLeft, { className: "h-3.5 w-3.5" }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Previous" })
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(import_lucide_react5.ChevronLeft, { className: "h-3.5 w-3.5" }),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "Previous" })
     ]
   }
 );
@@ -1717,7 +1789,7 @@ PaginationPrevious.displayName = "PaginationPrevious";
 var PaginationNext = ({
   className,
   ...props
-}) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
+}) => /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
   PaginationLink,
   {
     "aria-label": "Go to next page",
@@ -1729,8 +1801,8 @@ var PaginationNext = ({
     ),
     ...props,
     children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Next" }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_lucide_react5.ChevronRight, { className: "h-3.5 w-3.5" })
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "Next" }),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(import_lucide_react5.ChevronRight, { className: "h-3.5 w-3.5" })
     ]
   }
 );
@@ -1738,22 +1810,22 @@ PaginationNext.displayName = "PaginationNext";
 var PaginationEllipsis = ({
   className,
   ...props
-}) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
+}) => /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
   "span",
   {
     "aria-hidden": true,
     className: (0, import_classnames3.default)("flex h-9 w-9 items-center justify-center", className),
     ...props,
     children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_lucide_react5.MoreHorizontal, { className: "h-4 w-4" }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "sr-only", children: "More pages" })
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(import_lucide_react5.MoreHorizontal, { className: "h-4 w-4" }),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "sr-only", children: "More pages" })
     ]
   }
 );
 PaginationEllipsis.displayName = "PaginationEllipsis";
 
 // src/components/PaginationWrapper.tsx
-var import_jsx_runtime14 = require("react/jsx-runtime");
+var import_jsx_runtime15 = require("react/jsx-runtime");
 var PaginationWrapper = ({
   currentPage,
   lastPage,
@@ -1761,17 +1833,17 @@ var PaginationWrapper = ({
   onPageChange
 }) => {
   const pageLinks = links.slice(1, -1);
-  return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "flex flex-col xl:flex-row items-center xl:justify-between px-4 py-3 sm:px-6 mt-4 gap-4", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "hidden xl:flex", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("p", { className: "text-sm text-gray-700 whitespace-nowrap", children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "flex flex-col xl:flex-row items-center xl:justify-between px-4 py-3 sm:px-6 mt-4 gap-4", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: "hidden xl:flex", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("p", { className: "text-sm text-gray-700 whitespace-nowrap", children: [
       "Showing page ",
-      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "font-medium", children: currentPage }),
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: "font-medium", children: currentPage }),
       " of",
       " ",
-      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "font-medium", children: lastPage }),
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: "font-medium", children: lastPage }),
       " pages"
     ] }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Pagination, { className: "!justify-start xl:!justify-end", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(PaginationContent, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(PaginationItem, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(Pagination, { className: "!justify-start xl:!justify-end", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)(PaginationContent, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(PaginationItem, { children: /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
         PaginationPrevious,
         {
           onClick: (e) => {
@@ -1784,9 +1856,9 @@ var PaginationWrapper = ({
       pageLinks.map((link, index) => {
         const pageNumber = isNaN(Number(link.label)) ? null : Number(link.label);
         if (!pageNumber) {
-          return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(PaginationItem, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(PaginationEllipsis, {}) }, `ellipsis-${index}`);
+          return /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(PaginationItem, { children: /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(PaginationEllipsis, {}) }, `ellipsis-${index}`);
         }
-        return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(PaginationItem, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(PaginationItem, { children: /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
           PaginationLink,
           {
             onClick: (e) => {
@@ -1799,7 +1871,7 @@ var PaginationWrapper = ({
           }
         ) }, link.label);
       }),
-      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(PaginationItem, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(PaginationItem, { children: /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
         PaginationNext,
         {
           onClick: (e) => {
@@ -1936,7 +2008,7 @@ var useGetApplicationList_default = useGetApplicationList;
 
 // src/components/FormSelect.tsx
 var import_react_select = __toESM(require("react-select"));
-var import_jsx_runtime15 = require("react/jsx-runtime");
+var import_jsx_runtime16 = require("react/jsx-runtime");
 var selectStyles = {
   control: (base) => ({
     ...base,
@@ -1968,7 +2040,7 @@ var selectStyles = {
 };
 
 // src/components/ApplicationSection.tsx
-var import_jsx_runtime16 = require("react/jsx-runtime");
+var import_jsx_runtime17 = require("react/jsx-runtime");
 var ApplicationSection = ({ apiKey, url }) => {
   const [currentPage, setCurrentPage] = (0, import_react6.useState)(1);
   const {
@@ -2005,13 +2077,13 @@ var ApplicationSection = ({ apiKey, url }) => {
     value: item.value,
     label: item.label
   }));
-  return /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "flex items-center justify-between", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h1", { className: "sm:text-[16px] md:text-2xl font-medium mb-3", children: "Application List" }),
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "flex flex-col xl:flex-row justify-between md:items-end xl:items-center pb-2 gap-2" })
+  return /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)("div", { children: [
+    /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)("div", { className: "flex items-center justify-between", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("h1", { className: "sm:text-[16px] md:text-2xl font-medium mb-3", children: "Application List" }),
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("div", { className: "flex flex-col xl:flex-row justify-between md:items-end xl:items-center pb-2 gap-2" })
     ] }),
-    !loading && applications?.data && info?.permissions.can_download_applications_list && /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "mb-4", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "flex items-center justify-between gap-3 mb-4", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "flex items-center gap-2 flex-wrap justify-end flex-1", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+    !loading && applications?.data && info?.permissions.can_download_applications_list && /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("div", { className: "mb-4", children: /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("div", { className: "flex items-center justify-between gap-3 mb-4", children: /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)("div", { className: "flex items-center gap-2 flex-wrap justify-end flex-1", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
         import_react_select2.default,
         {
           className: "min-w-40",
@@ -2030,7 +2102,7 @@ var ApplicationSection = ({ apiKey, url }) => {
           placeholder: "Banking Type"
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
         import_react_select2.default,
         {
           className: "w-62.5",
@@ -2049,7 +2121,7 @@ var ApplicationSection = ({ apiKey, url }) => {
           placeholder: "Product Type"
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
         import_react_select2.default,
         {
           className: "min-w-30",
@@ -2068,7 +2140,7 @@ var ApplicationSection = ({ apiKey, url }) => {
           placeholder: "Gender"
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
         import_react_select2.default,
         {
           className: "min-w-45",
@@ -2087,7 +2159,7 @@ var ApplicationSection = ({ apiKey, url }) => {
           placeholder: "Application Status"
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "min-w-55", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("div", { className: "min-w-55", children: /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
         SearchBar_default,
         {
           searchValue: searchTerm,
@@ -2110,7 +2182,7 @@ var ApplicationSection = ({ apiKey, url }) => {
           }
         }
       ) }),
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
         DateFilter_default,
         {
           startDate,
@@ -2126,21 +2198,21 @@ var ApplicationSection = ({ apiKey, url }) => {
         }
       )
     ] }) }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("hr", { className: "text-gray-300 py-2" }),
-    loading && !error && /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(Loader_default, {}),
-    error && /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "py-8 text-center", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { className: "text-red-500 font-medium", children: "Failed to load applications." }),
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { className: "text-gray-500 mt-1", children: "Please try again later or contact support." })
+    /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("hr", { className: "text-gray-300 py-2" }),
+    loading && !error && /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(Loader_default, {}),
+    error && /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)("div", { className: "py-8 text-center", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("p", { className: "text-red-500 font-medium", children: "Failed to load applications." }),
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("p", { className: "text-gray-500 mt-1", children: "Please try again later or contact support." })
     ] }),
-    !loading && !error && applications?.data && /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(import_jsx_runtime16.Fragment, { children: (applications?.data ?? []).length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(import_jsx_runtime16.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+    !loading && !error && applications?.data && /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(import_jsx_runtime17.Fragment, { children: (applications?.data ?? []).length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)(import_jsx_runtime17.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
         ApplicationTable_default,
         {
           canDownloadPdf: info?.permissions.can_download_applications_list,
           data: applications.data
         }
       ),
-      applications?.meta && applications.meta.last_page > 1 && /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+      applications?.meta && applications.meta.last_page > 1 && /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
         PaginationWrapper_default,
         {
           currentPage: applications.meta.current_page ?? 1,
@@ -2149,7 +2221,7 @@ var ApplicationSection = ({ apiKey, url }) => {
           onPageChange: handlePageChange
         }
       )
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "py-8 text-center text-gray-500", children: "No application found." }) })
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("div", { className: "py-8 text-center text-gray-500", children: "No application found." }) })
   ] });
 };
 var ApplicationSection_default = ApplicationSection;

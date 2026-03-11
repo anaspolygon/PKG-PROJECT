@@ -996,8 +996,15 @@ var ApplicationDetailsContainer = ({
 };
 var ApplicationDetailsContainer_default = ApplicationDetailsContainer;
 
+// src/components/ApplicationDetailsProvider.tsx
+import { Toaster } from "sonner";
+import { jsx as jsx7 } from "react/jsx-runtime";
+function ApplicationDetailsProvider() {
+  return /* @__PURE__ */ jsx7(Toaster, { richColors: true, position: "top-right" });
+}
+
 // src/components/ApplicationDetails.tsx
-import { Fragment as Fragment4, jsx as jsx7, jsxs as jsxs7 } from "react/jsx-runtime";
+import { Fragment as Fragment4, jsx as jsx8, jsxs as jsxs7 } from "react/jsx-runtime";
 function ApplicationDetails({
   id,
   baseUrl,
@@ -1008,6 +1015,8 @@ function ApplicationDetails({
   const [loading, setLoading] = useState2(true);
   const [pdfDownloadloading, setPdfDownloadLoading] = useState2(false);
   const [documentsDownloadLoading, setDocumentsDownloadLoading] = useState2(false);
+  const [approveloading, setApproveLoading] = useState2(false);
+  const [rejectloading, setRejectLoading] = useState2(false);
   const detailsUrl = `${baseUrl}/api/application/${id}`;
   const preloadUrl = `${baseUrl}/api/preload-data`;
   useEffect2(() => {
@@ -1116,6 +1125,10 @@ function ApplicationDetails({
         },
         cache: "no-store"
       });
+      if (res.status == 401) {
+        window.location.reload();
+        return;
+      }
       if (!res.ok) {
         const text = await res.text();
         return;
@@ -1135,12 +1148,73 @@ function ApplicationDetails({
       setDocumentsDownloadLoading(false);
     }
   };
-  if (loading) return /* @__PURE__ */ jsx7(Loader_default, {});
+  const handleApprove = async () => {
+    try {
+      setApproveLoading(true);
+      const approveUrl = `${baseUrl}/api/admin/applications/${id}/approve`;
+      const res = await fetch(approveUrl, {
+        method: "POST",
+        headers: {
+          "x-api-key": apiKey
+        },
+        cache: "no-store"
+      });
+      if (res.status == 401) {
+        window.location.reload();
+        return;
+      }
+      if (res.ok) {
+        const data = await res.json();
+        toast.success(data.message);
+      }
+      if (!res.ok) {
+        const text = await res.text();
+        toast.error(text);
+        return;
+      }
+    } catch (e) {
+      console.error("error:", e);
+    } finally {
+      setApproveLoading(false);
+    }
+  };
+  const handleReject = async () => {
+    try {
+      setRejectLoading(true);
+      const approveUrl = `${baseUrl}/api/admin/applications/${id}/reject`;
+      const res = await fetch(approveUrl, {
+        method: "POST",
+        headers: {
+          "x-api-key": apiKey
+        },
+        cache: "no-store"
+      });
+      if (res.status == 401) {
+        window.location.reload();
+        return;
+      }
+      if (res.ok) {
+        const data = await res.json();
+        toast.success(data.message);
+      }
+      if (!res.ok) {
+        const text = await res.text();
+        toast.error(text);
+        return;
+      }
+    } catch (e) {
+      console.error("error:", e);
+    } finally {
+      setRejectLoading(false);
+    }
+  };
+  if (loading) return /* @__PURE__ */ jsx8(Loader_default, {});
   return /* @__PURE__ */ jsxs7(Fragment4, { children: [
+    /* @__PURE__ */ jsx8(ApplicationDetailsProvider, {}),
     /* @__PURE__ */ jsxs7("div", { className: "flex justify-between items-center pb-4", children: [
-      /* @__PURE__ */ jsx7("h1", { className: "text-2xl font-bold", children: "Application Details" }),
-      /* @__PURE__ */ jsx7("div", { className: "flex items-center gap-4", children: /* @__PURE__ */ jsxs7(Fragment4, { children: [
-        /* @__PURE__ */ jsx7(
+      /* @__PURE__ */ jsx8("h1", { className: "text-2xl font-bold", children: "Application Details" }),
+      /* @__PURE__ */ jsx8("div", { className: "flex items-center gap-4", children: /* @__PURE__ */ jsxs7(Fragment4, { children: [
+        /* @__PURE__ */ jsx8(
           PrimaryBtn_default,
           {
             variant: "secondary",
@@ -1152,7 +1226,7 @@ function ApplicationDetails({
             loadingContent: "Downloading..."
           }
         ),
-        /* @__PURE__ */ jsx7(
+        /* @__PURE__ */ jsx8(
           PrimaryBtn_default,
           {
             variant: "primary",
@@ -1166,7 +1240,7 @@ function ApplicationDetails({
         )
       ] }) })
     ] }),
-    /* @__PURE__ */ jsx7(
+    /* @__PURE__ */ jsx8(
       ApplicationDetailsContainer_default,
       {
         application,
@@ -1174,26 +1248,24 @@ function ApplicationDetails({
         showTitle: false
       }
     ),
-    /* @__PURE__ */ jsx7("div", { className: "flex mt-5 justify-end items-center gap-2", children: showActionsBtn ? /* @__PURE__ */ jsxs7(Fragment4, { children: [
-      /* @__PURE__ */ jsx7(
+    /* @__PURE__ */ jsx8("div", { className: "flex mt-5 justify-end items-center gap-2", children: showActionsBtn ? /* @__PURE__ */ jsxs7(Fragment4, { children: [
+      /* @__PURE__ */ jsx8(
         PrimaryBtn_default,
         {
-          onClick: () => {
-          },
+          onClick: handleApprove,
           variant: "success",
           content: "Approve",
-          loadingAll: false,
+          loadingAll: approveloading,
           loadingContent: "Approving..."
         }
       ),
-      /* @__PURE__ */ jsx7(
+      /* @__PURE__ */ jsx8(
         PrimaryBtn_default,
         {
-          onClick: () => {
-          },
+          onClick: handleReject,
           variant: "danger",
           content: "Reject",
-          loadingAll: false,
+          loadingAll: rejectloading,
           loadingContent: "Rejecting..."
         }
       )
@@ -1211,10 +1283,10 @@ import { Tooltip } from "antd";
 import { Eye } from "lucide-react";
 
 // src/components/table.tsx
-import { Fragment as Fragment5, jsx as jsx8, jsxs as jsxs8 } from "react/jsx-runtime";
+import { Fragment as Fragment5, jsx as jsx9, jsxs as jsxs8 } from "react/jsx-runtime";
 var Table = ({ columns, dataSource }) => {
-  return /* @__PURE__ */ jsx8(Fragment5, { children: /* @__PURE__ */ jsx8("div", { className: "overflow-auto h-[calc(100vh-285px)] border border-gray-200 rounded-lg", children: /* @__PURE__ */ jsxs8("table", { className: "min-w-full table-auto border-collapse", children: [
-    /* @__PURE__ */ jsx8("thead", { className: "text-gray-400 sticky top-0 bg-white z-10", children: /* @__PURE__ */ jsx8("tr", { children: columns.map((heading, index) => /* @__PURE__ */ jsx8(
+  return /* @__PURE__ */ jsx9(Fragment5, { children: /* @__PURE__ */ jsx9("div", { className: "overflow-auto h-[calc(100vh-285px)] border border-gray-200 rounded-lg", children: /* @__PURE__ */ jsxs8("table", { className: "min-w-full table-auto border-collapse", children: [
+    /* @__PURE__ */ jsx9("thead", { className: "text-gray-400 sticky top-0 bg-white z-10", children: /* @__PURE__ */ jsx9("tr", { children: columns.map((heading, index) => /* @__PURE__ */ jsx9(
       "th",
       {
         className: "px-4 py-4 text-left text-sm font-medium text-gray-500 capitalize border-b border-gray-200",
@@ -1222,7 +1294,7 @@ var Table = ({ columns, dataSource }) => {
       },
       index
     )) }) }),
-    /* @__PURE__ */ jsx8("tbody", { children: dataSource.map((data, index) => /* @__PURE__ */ jsx8(
+    /* @__PURE__ */ jsx9("tbody", { children: dataSource.map((data, index) => /* @__PURE__ */ jsx9(
       "tr",
       {
         className: "border-b border-gray-300 border-dashed hover:bg-gray-50 ",
@@ -1230,7 +1302,7 @@ var Table = ({ columns, dataSource }) => {
           if (!header || !data) return null;
           const value = data[header.key];
           const hasRender = typeof header.render === "function";
-          return /* @__PURE__ */ jsx8("td", { className: `px-4 py-4 text-sm text-gray-700`, children: hasRender ? header.render?.(value, data) : value !== null && value !== void 0 && value !== "" ? String(value) : "N/A" }, key);
+          return /* @__PURE__ */ jsx9("td", { className: `px-4 py-4 text-sm text-gray-700`, children: hasRender ? header.render?.(value, data) : value !== null && value !== void 0 && value !== "" ? String(value) : "N/A" }, key);
         })
       },
       index
@@ -1332,7 +1404,7 @@ var BankTypeTextColors = {
 };
 
 // src/components/ApplicationTable.tsx
-import { jsx as jsx9 } from "react/jsx-runtime";
+import { jsx as jsx10 } from "react/jsx-runtime";
 var ApplicationTable = ({ data }) => {
   const columns = [
     {
@@ -1359,7 +1431,7 @@ var ApplicationTable = ({ data }) => {
     {
       title: "Banking Type",
       key: "banking_type",
-      render: (_, record) => /* @__PURE__ */ jsx9(
+      render: (_, record) => /* @__PURE__ */ jsx10(
         "span",
         {
           className: clsx2(
@@ -1367,7 +1439,7 @@ var ApplicationTable = ({ data }) => {
             BankTypeBgColors[record.banking_type?.toLowerCase()],
             BankTypeTextColors[record.banking_type?.toLowerCase()]
           ),
-          children: getBankingType(record.banking_type) ?? /* @__PURE__ */ jsx9("span", { className: "text-gray-700 text-sm font-normal", children: "N/A" })
+          children: getBankingType(record.banking_type) ?? /* @__PURE__ */ jsx10("span", { className: "text-gray-700 text-sm font-normal", children: "N/A" })
         }
       )
     },
@@ -1383,7 +1455,7 @@ var ApplicationTable = ({ data }) => {
     {
       title: "Application Status",
       key: "status",
-      render: (_, record) => /* @__PURE__ */ jsx9(Tooltip, { placement: "top", title: record.failed_reason, children: /* @__PURE__ */ jsx9(
+      render: (_, record) => /* @__PURE__ */ jsx10(Tooltip, { placement: "top", title: record.failed_reason, children: /* @__PURE__ */ jsx10(
         "span",
         {
           className: clsx2(
@@ -1407,17 +1479,17 @@ var ApplicationTable = ({ data }) => {
         if (["submitted", "cbs_failed", "in_progress"].includes(
           record.status.toLowerCase()
         )) {
-          return /* @__PURE__ */ jsx9("div", { className: "flex gap-3  items-center", children: /* @__PURE__ */ jsx9(
+          return /* @__PURE__ */ jsx10("div", { className: "flex gap-3  items-center", children: /* @__PURE__ */ jsx10(
             "a",
             {
               className: "px-2 py-2 bg-purple-100 text-purple-500 hover:bg-purple-400 hover:text-white rounded-md shadow flex items-center cursor-pointer transition-all duration-300 ease-in-out",
               href: `/applications/${record.id}`,
-              children: /* @__PURE__ */ jsx9(
+              children: /* @__PURE__ */ jsx10(
                 "button",
                 {
                   className: "transform cursor-pointer",
                   title: "Application Details",
-                  children: /* @__PURE__ */ jsx9(Eye, { className: "w-4 h-4" })
+                  children: /* @__PURE__ */ jsx10(Eye, { className: "w-4 h-4" })
                 }
               )
             }
@@ -1427,7 +1499,7 @@ var ApplicationTable = ({ data }) => {
       }
     }
   ];
-  return /* @__PURE__ */ jsx9(table_default, { columns, dataSource: data });
+  return /* @__PURE__ */ jsx10(table_default, { columns, dataSource: data });
 };
 var ApplicationTable_default = ApplicationTable;
 
@@ -1435,7 +1507,7 @@ var ApplicationTable_default = ApplicationTable;
 import { useState as useState3 } from "react";
 import { Input } from "antd";
 import { Search, X } from "lucide-react";
-import { jsx as jsx10, jsxs as jsxs9 } from "react/jsx-runtime";
+import { jsx as jsx11, jsxs as jsxs9 } from "react/jsx-runtime";
 var SearchBar = ({
   searchValue,
   onSubmit,
@@ -1464,7 +1536,7 @@ var SearchBar = ({
   };
   return /* @__PURE__ */ jsxs9("div", { className: "flex flex-col gap-1 min-w-[250px] sm:text-[12px] lg:text-sm", children: [
     /* @__PURE__ */ jsxs9("div", { className: "relative", children: [
-      /* @__PURE__ */ jsx10(
+      /* @__PURE__ */ jsx11(
         Input,
         {
           value,
@@ -1474,17 +1546,17 @@ var SearchBar = ({
           onPressEnter: handleSubmit
         }
       ),
-      value && /* @__PURE__ */ jsx10(
+      value && /* @__PURE__ */ jsx11(
         "button",
         {
           onClick: handleClear,
           className: "absolute right-9 top-1/2 -translate-y-1/2 px-1 py-1 text-gray-500 hover:text-red-500 cursor-pointer sm:text-[12px] lg:text-sm",
           "aria-label": "Clear search",
           type: "button",
-          children: /* @__PURE__ */ jsx10(X, { size: 16 })
+          children: /* @__PURE__ */ jsx11(X, { size: 16 })
         }
       ),
-      /* @__PURE__ */ jsx10(
+      /* @__PURE__ */ jsx11(
         "button",
         {
           onClick: handleSubmit,
@@ -1492,12 +1564,12 @@ var SearchBar = ({
           "aria-label": "Submit search",
           type: "button",
           disabled: !isLengthValid,
-          children: /* @__PURE__ */ jsx10(Search, { size: 18 })
+          children: /* @__PURE__ */ jsx11(Search, { size: 18 })
         }
       )
     ] }),
-    warning && /* @__PURE__ */ jsx10("p", { className: "text-red-600 text-xs mt-1", children: warning }),
-    error && /* @__PURE__ */ jsx10("p", { className: "text-red-600 text-sm", children: error })
+    warning && /* @__PURE__ */ jsx11("p", { className: "text-red-600 text-xs mt-1", children: warning }),
+    error && /* @__PURE__ */ jsx11("p", { className: "text-red-600 text-sm", children: error })
   ] });
 };
 var SearchBar_default = SearchBar;
@@ -1505,7 +1577,7 @@ var SearchBar_default = SearchBar;
 // src/components/DateFilter.tsx
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
-import { jsx as jsx11 } from "react/jsx-runtime";
+import { jsx as jsx12 } from "react/jsx-runtime";
 var { RangePicker } = DatePicker;
 var DateFilter = ({
   startDate,
@@ -1519,7 +1591,7 @@ var DateFilter = ({
     const sixMonthsAgo = dayjs().subtract(6, "month").startOf("day");
     return current.isBefore(sixMonthsAgo);
   };
-  return /* @__PURE__ */ jsx11(
+  return /* @__PURE__ */ jsx12(
     RangePicker,
     {
       value,
@@ -1593,7 +1665,7 @@ var import_classnames2 = __toESM(require_classnames());
 import * as React2 from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
-import { jsx as jsx12 } from "react/jsx-runtime";
+import { jsx as jsx13 } from "react/jsx-runtime";
 var buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
@@ -1622,7 +1694,7 @@ var buttonVariants = cva(
 var Button = React2.forwardRef(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
-    return /* @__PURE__ */ jsx12(
+    return /* @__PURE__ */ jsx13(
       Comp,
       {
         className: (0, import_classnames2.default)(buttonVariants({ variant, size, className })),
@@ -1635,8 +1707,8 @@ var Button = React2.forwardRef(
 Button.displayName = "Button";
 
 // src/components/pagination.tsx
-import { jsx as jsx13, jsxs as jsxs10 } from "react/jsx-runtime";
-var Pagination = ({ className, ...props }) => /* @__PURE__ */ jsx13(
+import { jsx as jsx14, jsxs as jsxs10 } from "react/jsx-runtime";
+var Pagination = ({ className, ...props }) => /* @__PURE__ */ jsx14(
   "nav",
   {
     role: "navigation",
@@ -1646,7 +1718,7 @@ var Pagination = ({ className, ...props }) => /* @__PURE__ */ jsx13(
   }
 );
 Pagination.displayName = "Pagination";
-var PaginationContent = React3.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx13(
+var PaginationContent = React3.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx14(
   "ul",
   {
     ref,
@@ -1655,14 +1727,14 @@ var PaginationContent = React3.forwardRef(({ className, ...props }, ref) => /* @
   }
 ));
 PaginationContent.displayName = "PaginationContent";
-var PaginationItem = React3.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx13("li", { ref, className: (0, import_classnames3.default)("", className), ...props }));
+var PaginationItem = React3.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx14("li", { ref, className: (0, import_classnames3.default)("", className), ...props }));
 PaginationItem.displayName = "PaginationItem";
 var PaginationLink = ({
   className,
   isActive,
   size = "icon",
   ...props
-}) => /* @__PURE__ */ jsx13(
+}) => /* @__PURE__ */ jsx14(
   "a",
   {
     "aria-current": isActive ? "page" : void 0,
@@ -1694,8 +1766,8 @@ var PaginationPrevious = ({
     ),
     ...props,
     children: [
-      /* @__PURE__ */ jsx13(ChevronLeft, { className: "h-3.5 w-3.5" }),
-      /* @__PURE__ */ jsx13("span", { children: "Previous" })
+      /* @__PURE__ */ jsx14(ChevronLeft, { className: "h-3.5 w-3.5" }),
+      /* @__PURE__ */ jsx14("span", { children: "Previous" })
     ]
   }
 );
@@ -1715,8 +1787,8 @@ var PaginationNext = ({
     ),
     ...props,
     children: [
-      /* @__PURE__ */ jsx13("span", { children: "Next" }),
-      /* @__PURE__ */ jsx13(ChevronRight, { className: "h-3.5 w-3.5" })
+      /* @__PURE__ */ jsx14("span", { children: "Next" }),
+      /* @__PURE__ */ jsx14(ChevronRight, { className: "h-3.5 w-3.5" })
     ]
   }
 );
@@ -1731,15 +1803,15 @@ var PaginationEllipsis = ({
     className: (0, import_classnames3.default)("flex h-9 w-9 items-center justify-center", className),
     ...props,
     children: [
-      /* @__PURE__ */ jsx13(MoreHorizontal, { className: "h-4 w-4" }),
-      /* @__PURE__ */ jsx13("span", { className: "sr-only", children: "More pages" })
+      /* @__PURE__ */ jsx14(MoreHorizontal, { className: "h-4 w-4" }),
+      /* @__PURE__ */ jsx14("span", { className: "sr-only", children: "More pages" })
     ]
   }
 );
 PaginationEllipsis.displayName = "PaginationEllipsis";
 
 // src/components/PaginationWrapper.tsx
-import { jsx as jsx14, jsxs as jsxs11 } from "react/jsx-runtime";
+import { jsx as jsx15, jsxs as jsxs11 } from "react/jsx-runtime";
 var PaginationWrapper = ({
   currentPage,
   lastPage,
@@ -1748,16 +1820,16 @@ var PaginationWrapper = ({
 }) => {
   const pageLinks = links.slice(1, -1);
   return /* @__PURE__ */ jsxs11("div", { className: "flex flex-col xl:flex-row items-center xl:justify-between px-4 py-3 sm:px-6 mt-4 gap-4", children: [
-    /* @__PURE__ */ jsx14("div", { className: "hidden xl:flex", children: /* @__PURE__ */ jsxs11("p", { className: "text-sm text-gray-700 whitespace-nowrap", children: [
+    /* @__PURE__ */ jsx15("div", { className: "hidden xl:flex", children: /* @__PURE__ */ jsxs11("p", { className: "text-sm text-gray-700 whitespace-nowrap", children: [
       "Showing page ",
-      /* @__PURE__ */ jsx14("span", { className: "font-medium", children: currentPage }),
+      /* @__PURE__ */ jsx15("span", { className: "font-medium", children: currentPage }),
       " of",
       " ",
-      /* @__PURE__ */ jsx14("span", { className: "font-medium", children: lastPage }),
+      /* @__PURE__ */ jsx15("span", { className: "font-medium", children: lastPage }),
       " pages"
     ] }) }),
-    /* @__PURE__ */ jsx14(Pagination, { className: "!justify-start xl:!justify-end", children: /* @__PURE__ */ jsxs11(PaginationContent, { children: [
-      /* @__PURE__ */ jsx14(PaginationItem, { children: /* @__PURE__ */ jsx14(
+    /* @__PURE__ */ jsx15(Pagination, { className: "!justify-start xl:!justify-end", children: /* @__PURE__ */ jsxs11(PaginationContent, { children: [
+      /* @__PURE__ */ jsx15(PaginationItem, { children: /* @__PURE__ */ jsx15(
         PaginationPrevious,
         {
           onClick: (e) => {
@@ -1770,9 +1842,9 @@ var PaginationWrapper = ({
       pageLinks.map((link, index) => {
         const pageNumber = isNaN(Number(link.label)) ? null : Number(link.label);
         if (!pageNumber) {
-          return /* @__PURE__ */ jsx14(PaginationItem, { children: /* @__PURE__ */ jsx14(PaginationEllipsis, {}) }, `ellipsis-${index}`);
+          return /* @__PURE__ */ jsx15(PaginationItem, { children: /* @__PURE__ */ jsx15(PaginationEllipsis, {}) }, `ellipsis-${index}`);
         }
-        return /* @__PURE__ */ jsx14(PaginationItem, { children: /* @__PURE__ */ jsx14(
+        return /* @__PURE__ */ jsx15(PaginationItem, { children: /* @__PURE__ */ jsx15(
           PaginationLink,
           {
             onClick: (e) => {
@@ -1785,7 +1857,7 @@ var PaginationWrapper = ({
           }
         ) }, link.label);
       }),
-      /* @__PURE__ */ jsx14(PaginationItem, { children: /* @__PURE__ */ jsx14(
+      /* @__PURE__ */ jsx15(PaginationItem, { children: /* @__PURE__ */ jsx15(
         PaginationNext,
         {
           onClick: (e) => {
@@ -1922,7 +1994,7 @@ var useGetApplicationList_default = useGetApplicationList;
 
 // src/components/FormSelect.tsx
 import Select from "react-select";
-import { jsx as jsx15, jsxs as jsxs12 } from "react/jsx-runtime";
+import { jsx as jsx16, jsxs as jsxs12 } from "react/jsx-runtime";
 var selectStyles = {
   control: (base) => ({
     ...base,
@@ -1954,7 +2026,7 @@ var selectStyles = {
 };
 
 // src/components/ApplicationSection.tsx
-import { Fragment as Fragment6, jsx as jsx16, jsxs as jsxs13 } from "react/jsx-runtime";
+import { Fragment as Fragment6, jsx as jsx17, jsxs as jsxs13 } from "react/jsx-runtime";
 var ApplicationSection = ({ apiKey, url }) => {
   const [currentPage, setCurrentPage] = useState6(1);
   const {
@@ -1993,11 +2065,11 @@ var ApplicationSection = ({ apiKey, url }) => {
   }));
   return /* @__PURE__ */ jsxs13("div", { children: [
     /* @__PURE__ */ jsxs13("div", { className: "flex items-center justify-between", children: [
-      /* @__PURE__ */ jsx16("h1", { className: "sm:text-[16px] md:text-2xl font-medium mb-3", children: "Application List" }),
-      /* @__PURE__ */ jsx16("div", { className: "flex flex-col xl:flex-row justify-between md:items-end xl:items-center pb-2 gap-2" })
+      /* @__PURE__ */ jsx17("h1", { className: "sm:text-[16px] md:text-2xl font-medium mb-3", children: "Application List" }),
+      /* @__PURE__ */ jsx17("div", { className: "flex flex-col xl:flex-row justify-between md:items-end xl:items-center pb-2 gap-2" })
     ] }),
-    !loading && applications?.data && info?.permissions.can_download_applications_list && /* @__PURE__ */ jsx16("div", { className: "mb-4", children: /* @__PURE__ */ jsx16("div", { className: "flex items-center justify-between gap-3 mb-4", children: /* @__PURE__ */ jsxs13("div", { className: "flex items-center gap-2 flex-wrap justify-end flex-1", children: [
-      /* @__PURE__ */ jsx16(
+    !loading && applications?.data && info?.permissions.can_download_applications_list && /* @__PURE__ */ jsx17("div", { className: "mb-4", children: /* @__PURE__ */ jsx17("div", { className: "flex items-center justify-between gap-3 mb-4", children: /* @__PURE__ */ jsxs13("div", { className: "flex items-center gap-2 flex-wrap justify-end flex-1", children: [
+      /* @__PURE__ */ jsx17(
         Select2,
         {
           className: "min-w-40",
@@ -2016,7 +2088,7 @@ var ApplicationSection = ({ apiKey, url }) => {
           placeholder: "Banking Type"
         }
       ),
-      /* @__PURE__ */ jsx16(
+      /* @__PURE__ */ jsx17(
         Select2,
         {
           className: "w-62.5",
@@ -2035,7 +2107,7 @@ var ApplicationSection = ({ apiKey, url }) => {
           placeholder: "Product Type"
         }
       ),
-      /* @__PURE__ */ jsx16(
+      /* @__PURE__ */ jsx17(
         Select2,
         {
           className: "min-w-30",
@@ -2054,7 +2126,7 @@ var ApplicationSection = ({ apiKey, url }) => {
           placeholder: "Gender"
         }
       ),
-      /* @__PURE__ */ jsx16(
+      /* @__PURE__ */ jsx17(
         Select2,
         {
           className: "min-w-45",
@@ -2073,7 +2145,7 @@ var ApplicationSection = ({ apiKey, url }) => {
           placeholder: "Application Status"
         }
       ),
-      /* @__PURE__ */ jsx16("div", { className: "min-w-55", children: /* @__PURE__ */ jsx16(
+      /* @__PURE__ */ jsx17("div", { className: "min-w-55", children: /* @__PURE__ */ jsx17(
         SearchBar_default,
         {
           searchValue: searchTerm,
@@ -2096,7 +2168,7 @@ var ApplicationSection = ({ apiKey, url }) => {
           }
         }
       ) }),
-      /* @__PURE__ */ jsx16(
+      /* @__PURE__ */ jsx17(
         DateFilter_default,
         {
           startDate,
@@ -2112,21 +2184,21 @@ var ApplicationSection = ({ apiKey, url }) => {
         }
       )
     ] }) }) }),
-    /* @__PURE__ */ jsx16("hr", { className: "text-gray-300 py-2" }),
-    loading && !error && /* @__PURE__ */ jsx16(Loader_default, {}),
+    /* @__PURE__ */ jsx17("hr", { className: "text-gray-300 py-2" }),
+    loading && !error && /* @__PURE__ */ jsx17(Loader_default, {}),
     error && /* @__PURE__ */ jsxs13("div", { className: "py-8 text-center", children: [
-      /* @__PURE__ */ jsx16("p", { className: "text-red-500 font-medium", children: "Failed to load applications." }),
-      /* @__PURE__ */ jsx16("p", { className: "text-gray-500 mt-1", children: "Please try again later or contact support." })
+      /* @__PURE__ */ jsx17("p", { className: "text-red-500 font-medium", children: "Failed to load applications." }),
+      /* @__PURE__ */ jsx17("p", { className: "text-gray-500 mt-1", children: "Please try again later or contact support." })
     ] }),
-    !loading && !error && applications?.data && /* @__PURE__ */ jsx16(Fragment6, { children: (applications?.data ?? []).length > 0 ? /* @__PURE__ */ jsxs13(Fragment6, { children: [
-      /* @__PURE__ */ jsx16(
+    !loading && !error && applications?.data && /* @__PURE__ */ jsx17(Fragment6, { children: (applications?.data ?? []).length > 0 ? /* @__PURE__ */ jsxs13(Fragment6, { children: [
+      /* @__PURE__ */ jsx17(
         ApplicationTable_default,
         {
           canDownloadPdf: info?.permissions.can_download_applications_list,
           data: applications.data
         }
       ),
-      applications?.meta && applications.meta.last_page > 1 && /* @__PURE__ */ jsx16(
+      applications?.meta && applications.meta.last_page > 1 && /* @__PURE__ */ jsx17(
         PaginationWrapper_default,
         {
           currentPage: applications.meta.current_page ?? 1,
@@ -2135,7 +2207,7 @@ var ApplicationSection = ({ apiKey, url }) => {
           onPageChange: handlePageChange
         }
       )
-    ] }) : /* @__PURE__ */ jsx16("div", { className: "py-8 text-center text-gray-500", children: "No application found." }) })
+    ] }) : /* @__PURE__ */ jsx17("div", { className: "py-8 text-center text-gray-500", children: "No application found." }) })
   ] });
 };
 var ApplicationSection_default = ApplicationSection;
