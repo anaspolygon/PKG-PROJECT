@@ -2,8 +2,8 @@
 
 import { useLocalStorage } from "./useLocalStorage";
 
-export function useAddress(key: string = "preload") {
-  const preload = useLocalStorage(key);
+export function useAddress() {
+  const preload = useLocalStorage("preload");
   const districts =
     preload?.districts.map((item: any) => ({
       label: item.l,

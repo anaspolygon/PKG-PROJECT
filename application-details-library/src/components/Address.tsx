@@ -13,11 +13,10 @@ export interface AddressData {
 export interface AddressProps {
   fields: any[];
   addressData?: AddressData;
-  preloadKey?: string;
 }
 
-export default function Address({ fields, addressData, preloadKey }: AddressProps) {
-  const { divisions, districts, thanas, postal_codes } = useAddress(preloadKey);
+export default function Address({ fields, addressData }: AddressProps) {
+  const { divisions, districts, thanas, postal_codes } = useAddress();
   const getValue = (field: any) => {
     
 

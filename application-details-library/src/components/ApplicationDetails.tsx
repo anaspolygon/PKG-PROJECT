@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import Loader from "./Loader";
 import PrimaryBtn from "./PrimaryBtn";
@@ -7,28 +8,21 @@ import ApplicationDetailsContainer from "./ApplicationDetailsContainer";
 interface ApplicationDetailsProps {
   id: string | number;
   baseUrl: string;
-  preloadKey?: string;
   showActionsBtn?: boolean;
-  loadingApprove?: boolean;
-  loadingReject?: boolean;
-  handleApprove?: () => void;
-  handleReject?: () => void;
   apiKey: string;
 }
 
 export default function ApplicationDetails({
   id,
   baseUrl,
-  preloadKey,
   showActionsBtn,
-  loadingApprove,
-  loadingReject,
-  handleApprove,
-  handleReject,
   apiKey,
 }: ApplicationDetailsProps) {
   const [application, setApplication] = useState({});
   const [loading, setLoading] = useState(true);
+  const [pdfDownloadloading, setPdfDownloadLoading] = useState(false);
+  const [documentsDownloadLoading, setDocumentsDownloadLoading] =
+    useState(false);
 
   const detailsUrl = `${baseUrl}/api/application/${id}`;
   const preloadUrl = `${baseUrl}/api/preload-data`;
@@ -91,12 +85,115 @@ export default function ApplicationDetails({
     callPreloadApi();
   }, [preloadUrl, apiKey]);
 
+  const handlePdfDownload = async () => {
+    try {
+      setPdfDownloadLoading(true);
+
+      const pdfDownloadUrl = `${baseUrl}/api/admin/applications/${id}/pdf`;
+      const res = await fetch(pdfDownloadUrl, {
+        method: "POST",
+        headers: {
+          "x-api-key": apiKey,
+        },
+        body: null,
+      });
+
+      if (res.status === 202) {
+        const data = await res.json();
+        toast.success(data.message);
+        return;
+      }
+
+      if (res.status == 401) {
+        window.location.reload();
+        return;
+      }
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("PDF download error:", errorText);
+        return;
+      }
+
+      const pdfBlob = await res.blob();
+      const url = window.URL.createObjectURL(pdfBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `application-${id}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (e: any) {
+      console.error("PDF fetch error:", e);
+    } finally {
+      setPdfDownloadLoading(false);
+    }
+  };
+
+  const handleDocumentsDownload = async () => {
+    try {
+      setDocumentsDownloadLoading(true);
+      const downloadUrl = `${baseUrl}/api/admin/applications/${id}/documents/download`;
+      const res = await fetch(downloadUrl, {
+        method: "GET",
+        headers: {
+          "x-api-key": apiKey,
+        },
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        return;
+      }
+      const zipBlob = await res.blob();
+      const url = window.URL.createObjectURL(zipBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `documents-${id}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (e: any) {
+      console.error("ZIP fetch error:", e);
+    } finally {
+      setDocumentsDownloadLoading(false);
+    }
+  };
+
   if (loading) return <Loader />;
   return (
     <>
+      <div className="flex justify-between items-center pb-4">
+        <h1 className="text-2xl font-bold">Application Details</h1>
+        <div className="flex items-center gap-4">
+          <>
+            <PrimaryBtn
+              variant="secondary"
+              type="button"
+              onClick={handlePdfDownload}
+              loadingAll={pdfDownloadloading}
+              icon="download"
+              content="Download PDF"
+              loadingContent="Downloading..."
+            />
+
+            <PrimaryBtn
+              variant="primary"
+              type="button"
+              onClick={handleDocumentsDownload}
+              loadingAll={documentsDownloadLoading}
+              icon="download"
+              content="Download Documents"
+              loadingContent="Downloading..."
+            />
+          </>
+        </div>
+      </div>
       <ApplicationDetailsContainer
         application={application}
-        preloadKey={preloadKey}
         title="Application Details"
         showTitle={false}
       />
@@ -104,17 +201,17 @@ export default function ApplicationDetails({
         {showActionsBtn ? (
           <>
             <PrimaryBtn
-              onClick={handleApprove}
+              onClick={() => {}}
               variant="success"
               content="Approve"
-              loadingAll={loadingApprove as boolean}
+              loadingAll={false}
               loadingContent={"Approving..."}
             />
             <PrimaryBtn
-              onClick={handleReject}
+              onClick={() => {}}
               variant="danger"
               content="Reject"
-              loadingAll={loadingReject as boolean}
+              loadingAll={false}
               loadingContent={"Rejecting..."}
             />
           </>

@@ -6,7 +6,6 @@ import { ApplicationDetailsRoot } from "../types/ApplicationDetailsType";
 
 export interface ApplicationDetailsContainerProps {
   application: ApplicationDetailsRoot;
-  preloadKey?: string;
   title?: string;
   showTitle?: boolean;
 }
@@ -15,7 +14,6 @@ const ApplicationDetailsContainer: React.FC<
   ApplicationDetailsContainerProps
 > = ({
   application,
-  preloadKey,
   title = "Application Details",
   showTitle = true,
 }) => {
@@ -35,7 +33,6 @@ const ApplicationDetailsContainer: React.FC<
         <CollapsibleSectionsContainer
           application={application}
           nidNo={nidNo}
-          preloadKey={preloadKey}
         />
       </div>
     </div>

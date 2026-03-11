@@ -101,6 +101,7 @@ __export(index_exports, {
 module.exports = __toCommonJS(index_exports);
 
 // src/components/ApplicationDetails.tsx
+var import_sonner = require("sonner");
 var import_react2 = require("react");
 
 // src/components/Loader.tsx
@@ -377,8 +378,8 @@ function useLocalStorage(key) {
 }
 
 // src/hooks/useAddress.ts
-function useAddress(key = "preload") {
-  const preload = useLocalStorage(key);
+function useAddress() {
+  const preload = useLocalStorage("preload");
   const districts = preload?.districts.map((item) => ({
     label: item.l,
     value: item.v
@@ -405,8 +406,8 @@ function useAddress(key = "preload") {
 
 // src/components/Address.tsx
 var import_jsx_runtime4 = require("react/jsx-runtime");
-function Address({ fields, addressData, preloadKey }) {
-  const { divisions, districts, thanas, postal_codes } = useAddress(preloadKey);
+function Address({ fields, addressData }) {
+  const { divisions, districts, thanas, postal_codes } = useAddress();
   const getValue = (field) => {
     if (field.slug.includes("division")) {
       return divisions?.find(
@@ -574,7 +575,7 @@ var getApplicationStatus = (status) => {
 // src/components/CollapsibleSection.tsx
 var import_lucide_react2 = require("lucide-react");
 var import_jsx_runtime5 = require("react/jsx-runtime");
-var CollapsibleSectionsContainer = ({ application, preloadKey }) => {
+var CollapsibleSectionsContainer = ({ application }) => {
   const getValue = (field) => {
     if (["dropdown", "radio"].includes(field.input_type) && (field.possible_values ?? []).length > 0) {
       return field.possible_values?.find(
@@ -626,7 +627,7 @@ var CollapsibleSectionsContainer = ({ application, preloadKey }) => {
   const items = data.filter((item) => item !== void 0).map((item) => ({
     key: item?.label,
     label: item.section_slug === "credit_risk_grading" && application.additional_info?.risk_grading_details ? `${item?.label} (Total score : ${application.additional_info.risk_grading_details?.risk_score?.score})` : item?.label,
-    children: item.section_slug === "nid" ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Images, { images: item.value }) : item.section_slug === "address_information" ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Address, { fields: item.fields, preloadKey }) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+    children: item.section_slug === "nid" ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Images, { images: item.value }) : item.section_slug === "address_information" ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Address, { fields: item.fields }) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
       FormSection,
       {
         fields: item.fields,
@@ -639,37 +640,6 @@ var CollapsibleSectionsContainer = ({ application, preloadKey }) => {
     return value ? value.split("_").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ") : null;
   };
   return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex justify-between items-center", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h1", { className: "text-2xl font-bold", children: "Application Details" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "flex items-center gap-4", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-          PrimaryBtn_default,
-          {
-            variant: "secondary",
-            type: "button",
-            onClick: () => {
-            },
-            loadingAll: false,
-            icon: "download",
-            content: "Download PDF",
-            loadingContent: "Downloading..."
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-          PrimaryBtn_default,
-          {
-            variant: "primary",
-            type: "button",
-            onClick: () => {
-            },
-            loadingAll: false,
-            icon: "download",
-            content: "Download Documents",
-            loadingContent: "Downloading..."
-          }
-        )
-      ] }) })
-    ] }),
     /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("hr", { className: "text-gray-300" }),
     /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bg-white rounded-xl shadow-sm border border-gray-200 pt-6 pb-6 px-6 mb-2", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex flex-col 2xl:flex-row 2xl:gap-6", children: [
       /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex flex-col gap-4 2xl:w-auto 2xl:shrink-0", children: [
@@ -1020,7 +990,6 @@ var EcFailed = () => {
 var import_jsx_runtime6 = require("react/jsx-runtime");
 var ApplicationDetailsContainer = ({
   application,
-  preloadKey,
   title = "Application Details",
   showTitle = true
 }) => {
@@ -1034,8 +1003,7 @@ var ApplicationDetailsContainer = ({
       CollapsibleSection_default,
       {
         application,
-        nidNo,
-        preloadKey
+        nidNo
       }
     ) })
   ] });
@@ -1047,16 +1015,13 @@ var import_jsx_runtime7 = require("react/jsx-runtime");
 function ApplicationDetails({
   id,
   baseUrl,
-  preloadKey,
   showActionsBtn,
-  loadingApprove,
-  loadingReject,
-  handleApprove,
-  handleReject,
   apiKey
 }) {
   const [application, setApplication] = (0, import_react2.useState)({});
   const [loading, setLoading] = (0, import_react2.useState)(true);
+  const [pdfDownloadloading, setPdfDownloadLoading] = (0, import_react2.useState)(false);
+  const [documentsDownloadLoading, setDocumentsDownloadLoading] = (0, import_react2.useState)(false);
   const detailsUrl = `${baseUrl}/api/application/${id}`;
   const preloadUrl = `${baseUrl}/api/preload-data`;
   (0, import_react2.useEffect)(() => {
@@ -1114,13 +1079,111 @@ function ApplicationDetails({
     };
     callPreloadApi();
   }, [preloadUrl, apiKey]);
+  const handlePdfDownload = async () => {
+    try {
+      setPdfDownloadLoading(true);
+      const pdfDownloadUrl = `${baseUrl}/api/admin/applications/${id}/pdf`;
+      const res = await fetch(pdfDownloadUrl, {
+        method: "POST",
+        headers: {
+          "x-api-key": apiKey
+        },
+        body: null
+      });
+      if (res.status === 202) {
+        const data = await res.json();
+        import_sonner.toast.success(data.message);
+        return;
+      }
+      if (res.status == 401) {
+        window.location.reload();
+        return;
+      }
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("PDF download error:", errorText);
+        return;
+      }
+      const pdfBlob = await res.blob();
+      const url = window.URL.createObjectURL(pdfBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `application-${id}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error("PDF fetch error:", e);
+    } finally {
+      setPdfDownloadLoading(false);
+    }
+  };
+  const handleDocumentsDownload = async () => {
+    try {
+      setDocumentsDownloadLoading(true);
+      const downloadUrl = `${baseUrl}/api/admin/applications/${id}/documents/download`;
+      const res = await fetch(downloadUrl, {
+        method: "GET",
+        headers: {
+          "x-api-key": apiKey
+        },
+        cache: "no-store"
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        return;
+      }
+      const zipBlob = await res.blob();
+      const url = window.URL.createObjectURL(zipBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `documents-${id}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error("ZIP fetch error:", e);
+    } finally {
+      setDocumentsDownloadLoading(false);
+    }
+  };
   if (loading) return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Loader_default, {});
   return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex justify-between items-center pb-4", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h1", { className: "text-2xl font-bold", children: "Application Details" }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "flex items-center gap-4", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          PrimaryBtn_default,
+          {
+            variant: "secondary",
+            type: "button",
+            onClick: handlePdfDownload,
+            loadingAll: pdfDownloadloading,
+            icon: "download",
+            content: "Download PDF",
+            loadingContent: "Downloading..."
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          PrimaryBtn_default,
+          {
+            variant: "primary",
+            type: "button",
+            onClick: handleDocumentsDownload,
+            loadingAll: documentsDownloadLoading,
+            icon: "download",
+            content: "Download Documents",
+            loadingContent: "Downloading..."
+          }
+        )
+      ] }) })
+    ] }),
     /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
       ApplicationDetailsContainer_default,
       {
         application,
-        preloadKey,
         title: "Application Details",
         showTitle: false
       }
@@ -1129,20 +1192,22 @@ function ApplicationDetails({
       /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
         PrimaryBtn_default,
         {
-          onClick: handleApprove,
+          onClick: () => {
+          },
           variant: "success",
           content: "Approve",
-          loadingAll: loadingApprove,
+          loadingAll: false,
           loadingContent: "Approving..."
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
         PrimaryBtn_default,
         {
-          onClick: handleReject,
+          onClick: () => {
+          },
           variant: "danger",
           content: "Reject",
-          loadingAll: loadingReject,
+          loadingAll: false,
           loadingContent: "Rejecting..."
         }
       )

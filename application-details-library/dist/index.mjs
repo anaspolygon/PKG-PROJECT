@@ -87,6 +87,7 @@ var require_classnames = __commonJS({
 });
 
 // src/components/ApplicationDetails.tsx
+import { toast } from "sonner";
 import { useEffect as useEffect2, useState as useState2 } from "react";
 
 // src/components/Loader.tsx
@@ -363,8 +364,8 @@ function useLocalStorage(key) {
 }
 
 // src/hooks/useAddress.ts
-function useAddress(key = "preload") {
-  const preload = useLocalStorage(key);
+function useAddress() {
+  const preload = useLocalStorage("preload");
   const districts = preload?.districts.map((item) => ({
     label: item.l,
     value: item.v
@@ -391,8 +392,8 @@ function useAddress(key = "preload") {
 
 // src/components/Address.tsx
 import { Fragment, jsx as jsx4, jsxs as jsxs4 } from "react/jsx-runtime";
-function Address({ fields, addressData, preloadKey }) {
-  const { divisions, districts, thanas, postal_codes } = useAddress(preloadKey);
+function Address({ fields, addressData }) {
+  const { divisions, districts, thanas, postal_codes } = useAddress();
   const getValue = (field) => {
     if (field.slug.includes("division")) {
       return divisions?.find(
@@ -560,7 +561,7 @@ var getApplicationStatus = (status) => {
 // src/components/CollapsibleSection.tsx
 import { CircleCheckBig, CircleX } from "lucide-react";
 import { Fragment as Fragment2, jsx as jsx5, jsxs as jsxs5 } from "react/jsx-runtime";
-var CollapsibleSectionsContainer = ({ application, preloadKey }) => {
+var CollapsibleSectionsContainer = ({ application }) => {
   const getValue = (field) => {
     if (["dropdown", "radio"].includes(field.input_type) && (field.possible_values ?? []).length > 0) {
       return field.possible_values?.find(
@@ -612,7 +613,7 @@ var CollapsibleSectionsContainer = ({ application, preloadKey }) => {
   const items = data.filter((item) => item !== void 0).map((item) => ({
     key: item?.label,
     label: item.section_slug === "credit_risk_grading" && application.additional_info?.risk_grading_details ? `${item?.label} (Total score : ${application.additional_info.risk_grading_details?.risk_score?.score})` : item?.label,
-    children: item.section_slug === "nid" ? /* @__PURE__ */ jsx5(Images, { images: item.value }) : item.section_slug === "address_information" ? /* @__PURE__ */ jsx5(Address, { fields: item.fields, preloadKey }) : /* @__PURE__ */ jsx5(
+    children: item.section_slug === "nid" ? /* @__PURE__ */ jsx5(Images, { images: item.value }) : item.section_slug === "address_information" ? /* @__PURE__ */ jsx5(Address, { fields: item.fields }) : /* @__PURE__ */ jsx5(
       FormSection,
       {
         fields: item.fields,
@@ -625,37 +626,6 @@ var CollapsibleSectionsContainer = ({ application, preloadKey }) => {
     return value ? value.split("_").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ") : null;
   };
   return /* @__PURE__ */ jsxs5(Fragment2, { children: [
-    /* @__PURE__ */ jsxs5("div", { className: "flex justify-between items-center", children: [
-      /* @__PURE__ */ jsx5("h1", { className: "text-2xl font-bold", children: "Application Details" }),
-      /* @__PURE__ */ jsx5("div", { className: "flex items-center gap-4", children: /* @__PURE__ */ jsxs5(Fragment2, { children: [
-        /* @__PURE__ */ jsx5(
-          PrimaryBtn_default,
-          {
-            variant: "secondary",
-            type: "button",
-            onClick: () => {
-            },
-            loadingAll: false,
-            icon: "download",
-            content: "Download PDF",
-            loadingContent: "Downloading..."
-          }
-        ),
-        /* @__PURE__ */ jsx5(
-          PrimaryBtn_default,
-          {
-            variant: "primary",
-            type: "button",
-            onClick: () => {
-            },
-            loadingAll: false,
-            icon: "download",
-            content: "Download Documents",
-            loadingContent: "Downloading..."
-          }
-        )
-      ] }) })
-    ] }),
     /* @__PURE__ */ jsx5("hr", { className: "text-gray-300" }),
     /* @__PURE__ */ jsx5("div", { className: "bg-white rounded-xl shadow-sm border border-gray-200 pt-6 pb-6 px-6 mb-2", children: /* @__PURE__ */ jsxs5("div", { className: "flex flex-col 2xl:flex-row 2xl:gap-6", children: [
       /* @__PURE__ */ jsxs5("div", { className: "flex flex-col gap-4 2xl:w-auto 2xl:shrink-0", children: [
@@ -1006,7 +976,6 @@ var EcFailed = () => {
 import { Fragment as Fragment3, jsx as jsx6, jsxs as jsxs6 } from "react/jsx-runtime";
 var ApplicationDetailsContainer = ({
   application,
-  preloadKey,
   title = "Application Details",
   showTitle = true
 }) => {
@@ -1020,8 +989,7 @@ var ApplicationDetailsContainer = ({
       CollapsibleSection_default,
       {
         application,
-        nidNo,
-        preloadKey
+        nidNo
       }
     ) })
   ] });
@@ -1033,16 +1001,13 @@ import { Fragment as Fragment4, jsx as jsx7, jsxs as jsxs7 } from "react/jsx-run
 function ApplicationDetails({
   id,
   baseUrl,
-  preloadKey,
   showActionsBtn,
-  loadingApprove,
-  loadingReject,
-  handleApprove,
-  handleReject,
   apiKey
 }) {
   const [application, setApplication] = useState2({});
   const [loading, setLoading] = useState2(true);
+  const [pdfDownloadloading, setPdfDownloadLoading] = useState2(false);
+  const [documentsDownloadLoading, setDocumentsDownloadLoading] = useState2(false);
   const detailsUrl = `${baseUrl}/api/application/${id}`;
   const preloadUrl = `${baseUrl}/api/preload-data`;
   useEffect2(() => {
@@ -1100,13 +1065,111 @@ function ApplicationDetails({
     };
     callPreloadApi();
   }, [preloadUrl, apiKey]);
+  const handlePdfDownload = async () => {
+    try {
+      setPdfDownloadLoading(true);
+      const pdfDownloadUrl = `${baseUrl}/api/admin/applications/${id}/pdf`;
+      const res = await fetch(pdfDownloadUrl, {
+        method: "POST",
+        headers: {
+          "x-api-key": apiKey
+        },
+        body: null
+      });
+      if (res.status === 202) {
+        const data = await res.json();
+        toast.success(data.message);
+        return;
+      }
+      if (res.status == 401) {
+        window.location.reload();
+        return;
+      }
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("PDF download error:", errorText);
+        return;
+      }
+      const pdfBlob = await res.blob();
+      const url = window.URL.createObjectURL(pdfBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `application-${id}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error("PDF fetch error:", e);
+    } finally {
+      setPdfDownloadLoading(false);
+    }
+  };
+  const handleDocumentsDownload = async () => {
+    try {
+      setDocumentsDownloadLoading(true);
+      const downloadUrl = `${baseUrl}/api/admin/applications/${id}/documents/download`;
+      const res = await fetch(downloadUrl, {
+        method: "GET",
+        headers: {
+          "x-api-key": apiKey
+        },
+        cache: "no-store"
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        return;
+      }
+      const zipBlob = await res.blob();
+      const url = window.URL.createObjectURL(zipBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `documents-${id}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error("ZIP fetch error:", e);
+    } finally {
+      setDocumentsDownloadLoading(false);
+    }
+  };
   if (loading) return /* @__PURE__ */ jsx7(Loader_default, {});
   return /* @__PURE__ */ jsxs7(Fragment4, { children: [
+    /* @__PURE__ */ jsxs7("div", { className: "flex justify-between items-center pb-4", children: [
+      /* @__PURE__ */ jsx7("h1", { className: "text-2xl font-bold", children: "Application Details" }),
+      /* @__PURE__ */ jsx7("div", { className: "flex items-center gap-4", children: /* @__PURE__ */ jsxs7(Fragment4, { children: [
+        /* @__PURE__ */ jsx7(
+          PrimaryBtn_default,
+          {
+            variant: "secondary",
+            type: "button",
+            onClick: handlePdfDownload,
+            loadingAll: pdfDownloadloading,
+            icon: "download",
+            content: "Download PDF",
+            loadingContent: "Downloading..."
+          }
+        ),
+        /* @__PURE__ */ jsx7(
+          PrimaryBtn_default,
+          {
+            variant: "primary",
+            type: "button",
+            onClick: handleDocumentsDownload,
+            loadingAll: documentsDownloadLoading,
+            icon: "download",
+            content: "Download Documents",
+            loadingContent: "Downloading..."
+          }
+        )
+      ] }) })
+    ] }),
     /* @__PURE__ */ jsx7(
       ApplicationDetailsContainer_default,
       {
         application,
-        preloadKey,
         title: "Application Details",
         showTitle: false
       }
@@ -1115,20 +1178,22 @@ function ApplicationDetails({
       /* @__PURE__ */ jsx7(
         PrimaryBtn_default,
         {
-          onClick: handleApprove,
+          onClick: () => {
+          },
           variant: "success",
           content: "Approve",
-          loadingAll: loadingApprove,
+          loadingAll: false,
           loadingContent: "Approving..."
         }
       ),
       /* @__PURE__ */ jsx7(
         PrimaryBtn_default,
         {
-          onClick: handleReject,
+          onClick: () => {
+          },
           variant: "danger",
           content: "Reject",
-          loadingAll: loadingReject,
+          loadingAll: false,
           loadingContent: "Rejecting..."
         }
       )

@@ -4,7 +4,7 @@ import React from "react";
 import { Collapse, Image } from "antd";
 import clsx from "clsx";
 import FormSection from "./FormSection";
-import Address, { AddressData } from "./Address";
+import Address from "./Address";
 import { Field, ApplicationDetailsRoot } from "../types/ApplicationDetailsType";
 import {
   ApplicationStatus,
@@ -13,12 +13,10 @@ import {
   getApplicationStatus,
 } from "../types/constants";
 import { CircleCheckBig, CircleX } from "lucide-react";
-import PrimaryBtn from "./PrimaryBtn";
 
 export interface CollapsibleSectionsContainerProps {
   application: ApplicationDetailsRoot;
   nidNo?: string;
-  preloadKey?: string;
 }
 
 export function downloadDocument(name: string, blob: Blob) {
@@ -34,7 +32,7 @@ export function downloadDocument(name: string, blob: Blob) {
 
 const CollapsibleSectionsContainer: React.FC<
   CollapsibleSectionsContainerProps
-> = ({ application, preloadKey }) => {
+> = ({ application }) => {
   const getValue = (field: Field) => {
     if (
       ["dropdown", "radio"].includes(field.input_type as string) &&
@@ -105,7 +103,7 @@ const CollapsibleSectionsContainer: React.FC<
         item.section_slug === "nid" ? (
           <Images images={item.value} />
         ) : item.section_slug === "address_information" ? (
-          <Address fields={item.fields} preloadKey={preloadKey} />
+          <Address fields={item.fields}  />
         ) : (
           <FormSection
             fields={item.fields}
@@ -126,259 +124,8 @@ const CollapsibleSectionsContainer: React.FC<
 
   return (
     <>
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Application Details</h1>
-        <div className="flex items-center gap-4">
-          <>
-            <PrimaryBtn
-              variant="secondary"
-              type="button"
-              onClick={() => {}}
-              loadingAll={false}
-              icon="download"
-              content="Download PDF"
-              loadingContent="Downloading..."
-            />
-
-            <PrimaryBtn
-              variant="primary"
-              type="button"
-              onClick={() => {}}
-              loadingAll={false}
-              icon="download"
-              content="Download Documents"
-              loadingContent="Downloading..."
-            />
-          </>
-        </div>
-      </div>
-
       <hr className="text-gray-300" />
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 pt-6 pb-6 px-6 mb-2">
-        {/* <div className="flex flex-col lg:flex-row gap-6 w-full">
-          <div className="flex flex-col gap-4">
-            <div className="flex gap-4">
-              <div className="shrink-0">
-                <div className="relative">
-                  <Image
-                    width={280}
-                    height={280}
-                    src={application.additional_info?.user_image}
-                    alt="user image"
-                    className="rounded-lg border-2 border-gray-100"
-                  />
-
-                  <div className="absolute -bottom-2 -right-2 bg-white rounded-full p-2 shadow-md border border-gray-200">
-                    <svg
-                      className="w-5 h-5 text-blue-600"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide text-center">
-                  User Image
-                </h2>
-              </div>
-
-              <div className="flex-shrink-0">
-                <div className="relative">
-                  <Image
-                    width={280}
-                    height={280}
-                    src={application.additional_info?.ec_user_image}
-                    alt="ec image"
-                    className="rounded-lg border-2 border-gray-100"
-                  />
-                  <div className="absolute -bottom-2 -right-2 bg-white rounded-full p-2 shadow-md border border-gray-200">
-                    <svg
-                      className="w-5 h-5 text-blue-600"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide text-center">
-                  Ec Image
-                </h2>
-              </div>
-            </div>
-
-            <div className="flex flex-col bg-gray-50 rounded-lg p-4 border border-gray-200">
-              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
-                Face Match Score
-              </span>
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-bold text-blue-600 min-w-[45px]">
-                  {application.additional_info?.face_match_percentage}%
-                </span>
-                <div className="flex-1">
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className={clsx(
-                        "h-2 rounded-full transition-all duration-300",
-                        Number(
-                          application.additional_info?.face_match_percentage,
-                        ) >= 80
-                          ? "bg-green-500"
-                          : Number(
-                                application.additional_info
-                                  ?.face_match_percentage,
-                              ) >= 60
-                            ? "bg-yellow-500"
-                            : "bg-red-500",
-                      )}
-                      style={{
-                        width: `${application.additional_info?.face_match_percentage}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 pb-3 border-b border-gray-200">
-              Application Information
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                    Application ID
-                  </span>
-                  <span className="text-sm font-semibold text-gray-900">
-                    {application.additional_info?.application_display_id}
-                  </span>
-                </div>
-
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                    Name
-                  </span>
-                  <span className="text-sm font-semibold text-gray-900">
-                    {application.additional_info?.name}
-                  </span>
-                </div>
-
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                    Gender
-                  </span>
-                  <span className="text-sm font-semibold text-gray-900 capitalize">
-                    {application.additional_info?.gender}
-                  </span>
-                </div>
-
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                    Date of birth
-                  </span>
-                  <span className="text-sm font-semibold text-gray-900">
-                    {application.additional_info?.dob}
-                  </span>
-                </div>
-
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                    Mobile
-                  </span>
-                  <span className="text-sm font-semibold text-gray-900">
-                    {application.additional_info?.mobile}
-                  </span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                    NID No
-                  </span>
-                  <span className="text-sm font-semibold text-gray-900">
-                    {application.additional_info?.nid_no}
-                  </span>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                    Branch Name
-                  </span>
-                  <span className="text-sm font-semibold text-gray-900 capitalize">
-                    {application.additional_info?.branch_name ?? "N/A"}
-                  </span>
-                </div>
-
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                    Banking Type
-                  </span>
-                  <span className="text-sm font-semibold text-gray-900 capitalize">
-                    {application.additional_info?.banking_type ?? "N/A"}
-                  </span>
-                </div>
-
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                    Product Type
-                  </span>
-                  <span className="text-sm font-semibold text-gray-900 capitalize">
-                    {formatValue(
-                      application.additional_info?.product_type ?? "N/A",
-                    )}
-                  </span>
-                </div>
-
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                    Application Status
-                  </span>
-                  <div>
-                    <span
-                      className={clsx(
-                        "inline-flex px-3 py-1 rounded-full text-xs font-semibold",
-                        ApplicationStatusBgColors[
-                          application.additional_info
-                            ?.application_status as unknown as ApplicationStatus
-                        ],
-                        ApplicationStatusTextColors[
-                          application.additional_info
-                            ?.application_status as unknown as ApplicationStatus
-                        ],
-                      )}
-                    >
-                      {getApplicationStatus(
-                        application.additional_info
-                          ?.application_status as unknown as string,
-                      )}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                    Submitted At
-                  </span>
-                  <span className="text-sm font-semibold text-gray-900">
-                    {application.additional_info?.first_submitted_at ?? "N/A"}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> */}
         <div className="flex flex-col 2xl:flex-row 2xl:gap-6">
           {/* LEFT SECTION: Images + Face Match (full width below 1440, left col above) */}
           <div className="flex flex-col gap-4 2xl:w-auto 2xl:shrink-0">
