@@ -5,6 +5,7 @@ import Loader from "./Loader";
 import PrimaryBtn from "./PrimaryBtn";
 import ApplicationDetailsContainer from "./ApplicationDetailsContainer";
 import { ApplicationDetailsProvider } from "./ApplicationDetailsProvider";
+import { ApplicationDetailsRoot } from "../types/ApplicationDetailsType";
 
 interface ApplicationDetailsProps {
   id: string | number;
@@ -19,7 +20,7 @@ export default function ApplicationDetails({
   showActionsBtn,
   apiKey,
 }: ApplicationDetailsProps) {
-  const [application, setApplication] = useState({});
+  const [application, setApplication] = useState<ApplicationDetailsRoot>({});
   const [loading, setLoading] = useState(true);
   const [pdfDownloadloading, setPdfDownloadLoading] = useState(false);
   const [documentsDownloadLoading, setDocumentsDownloadLoading] =
@@ -30,30 +31,31 @@ export default function ApplicationDetails({
   const detailsUrl = `${baseUrl}/api/application/${id}`;
   const preloadUrl = `${baseUrl}/api/preload-data`;
 
-  useEffect(() => {
-    const fetchApplication = async () => {
-      try {
-        const res = await fetch(detailsUrl, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": apiKey,
-          },
-        });
-        if (res.status === 401) {
-          window.location.reload();
-          return;
-        }
-        const data = await res.json();
-        setApplication(data);
-      } catch (error) {
-        console.error("error:", error);
-      } finally {
-        setLoading(false);
+  const fetchApplication = async () => {
+    try {
+      const res = await fetch(detailsUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": apiKey,
+        },
+      });
+      if (res.status === 401) {
+        window.location.reload();
+        return;
       }
-    };
+      const data = await res.json();
+      setApplication(data);
+    } catch (error) {
+      console.error("error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchApplication();
-  }, [detailsUrl, apiKey]);
+  }, [detailsUrl, apiKey, fetchApplication]);
 
   useEffect(() => {
     const callPreloadApi = async () => {
@@ -193,6 +195,7 @@ export default function ApplicationDetails({
       if (res.ok) {
         const data = await res.json();
         toast.success(data.message);
+        fetchApplication();
       }
 
       if (!res.ok) {
@@ -227,6 +230,7 @@ export default function ApplicationDetails({
       if (res.ok) {
         const data = await res.json();
         toast.success(data.message);
+        fetchApplication();
       }
 
       if (!res.ok) {
@@ -242,6 +246,10 @@ export default function ApplicationDetails({
   };
 
   if (loading) return <Loader />;
+  const isNotApproved =
+    application?.additional_info?.application_status !== "approved";
+  const isNotRejected =
+    application?.additional_info?.application_status !== "rejected";
   return (
     <>
       <ApplicationDetailsProvider />
@@ -277,7 +285,7 @@ export default function ApplicationDetails({
         showTitle={false}
       />
       <div className="flex mt-5 justify-end items-center gap-2">
-        {showActionsBtn ? (
+        {showActionsBtn && isNotApproved && isNotRejected ? (
           <>
             <PrimaryBtn
               onClick={handleApprove}

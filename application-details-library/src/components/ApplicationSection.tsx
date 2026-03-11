@@ -45,7 +45,7 @@ const ApplicationSection = ({ apiKey, baseUrl }: Props) => {
   };
   const info = useLocalStorage("info");
   const [searchError, setSearchError] = useState<string | null>(null);
-  const { products } = useProductList(1, baseUrl);
+  const { products } = useProductList(1, baseUrl, apiKey);
   const productOptions = (products ?? []).map((item) => ({
     value: item.value,
     label: item.label,

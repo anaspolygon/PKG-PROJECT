@@ -1019,30 +1019,30 @@ function ApplicationDetails({
   const [rejectloading, setRejectLoading] = useState2(false);
   const detailsUrl = `${baseUrl}/api/application/${id}`;
   const preloadUrl = `${baseUrl}/api/preload-data`;
-  useEffect2(() => {
-    const fetchApplication = async () => {
-      try {
-        const res = await fetch(detailsUrl, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": apiKey
-          }
-        });
-        if (res.status === 401) {
-          window.location.reload();
-          return;
+  const fetchApplication = async () => {
+    try {
+      const res = await fetch(detailsUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": apiKey
         }
-        const data = await res.json();
-        setApplication(data);
-      } catch (error) {
-        console.error("error:", error);
-      } finally {
-        setLoading(false);
+      });
+      if (res.status === 401) {
+        window.location.reload();
+        return;
       }
-    };
+      const data = await res.json();
+      setApplication(data);
+    } catch (error) {
+      console.error("error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect2(() => {
     fetchApplication();
-  }, [detailsUrl, apiKey]);
+  }, [detailsUrl, apiKey, fetchApplication]);
   useEffect2(() => {
     const callPreloadApi = async () => {
       try {
@@ -1169,6 +1169,7 @@ function ApplicationDetails({
       if (res.ok) {
         const data = await res.json();
         toast.success(data.message);
+        fetchApplication();
       }
       if (!res.ok) {
         const text = await res.text();
@@ -1200,6 +1201,7 @@ function ApplicationDetails({
       if (res.ok) {
         const data = await res.json();
         toast.success(data.message);
+        fetchApplication();
       }
       if (!res.ok) {
         const text = await res.text();
@@ -1213,6 +1215,8 @@ function ApplicationDetails({
     }
   };
   if (loading) return /* @__PURE__ */ jsx8(Loader_default, {});
+  const isNotApproved = application?.additional_info?.application_status !== "approved";
+  const isNotRejected = application?.additional_info?.application_status !== "rejected";
   return /* @__PURE__ */ jsxs7(Fragment4, { children: [
     /* @__PURE__ */ jsx8(ApplicationDetailsProvider, {}),
     /* @__PURE__ */ jsxs7("div", { className: "flex justify-between items-center pb-4", children: [
@@ -1252,7 +1256,7 @@ function ApplicationDetails({
         showTitle: false
       }
     ),
-    /* @__PURE__ */ jsx8("div", { className: "flex mt-5 justify-end items-center gap-2", children: showActionsBtn ? /* @__PURE__ */ jsxs7(Fragment4, { children: [
+    /* @__PURE__ */ jsx8("div", { className: "flex mt-5 justify-end items-center gap-2", children: showActionsBtn && isNotApproved && isNotRejected ? /* @__PURE__ */ jsxs7(Fragment4, { children: [
       /* @__PURE__ */ jsx8(
         PrimaryBtn_default,
         {
@@ -1617,7 +1621,7 @@ var DateFilter_default = DateFilter;
 
 // src/hooks/useProductList.ts
 import { useEffect as useEffect3, useState as useState4, useCallback } from "react";
-var useProductList = (page = 1, baseUrl) => {
+var useProductList = (page = 1, baseUrl, apiKey) => {
   const [data, setData] = useState4(null);
   const [loading, setLoading] = useState4(true);
   const [error, setError] = useState4(null);
@@ -1629,7 +1633,7 @@ var useProductList = (page = 1, baseUrl) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": "mangeD01axB3sBDM3HwRmh2MmO4hQ5aXyXpCLOwp8QRYKymrgyCaaFwJciTgWqzz"
+          "x-api-key": apiKey
         }
       });
       if (res.status === 401) {
@@ -2061,7 +2065,7 @@ var ApplicationSection = ({ apiKey, baseUrl }) => {
   };
   const info = useLocalStorage("info");
   const [searchError, setSearchError] = useState6(null);
-  const { products } = useProductList_default(1, baseUrl);
+  const { products } = useProductList_default(1, baseUrl, apiKey);
   const productOptions = (products ?? []).map((item) => ({
     value: item.value,
     label: item.label

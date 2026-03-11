@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { ProductList } from "../types/ProductTypes";
 
-const useProductList = (page = 1, baseUrl: string) => {
+const useProductList = (page = 1, baseUrl: string, apiKey: string) => {
   const [data, setData] = useState<ProductList | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
@@ -17,8 +17,7 @@ const useProductList = (page = 1, baseUrl: string) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key":
-            "mangeD01axB3sBDM3HwRmh2MmO4hQ5aXyXpCLOwp8QRYKymrgyCaaFwJciTgWqzz",
+          "x-api-key": apiKey,
         },
       });
       if (res.status === 401) {
