@@ -43,6 +43,10 @@ export default function ApplicationDetails({
             "x-api-key": apiKey,
           },
         });
+        if (res.status === 401) {
+          window.location.reload();
+          return;
+        }
         const data = await res.json();
         setApplication(data);
       } catch (error) {
@@ -64,6 +68,10 @@ export default function ApplicationDetails({
             "x-api-key": apiKey,
           },
         });
+        if (res.status === 401) {
+          window.location.reload();
+          return;
+        }
         const preload = await res.json();
         const localPreload = JSON.parse(
           localStorage.getItem("preload") as string,
