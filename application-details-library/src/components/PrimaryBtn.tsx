@@ -30,7 +30,8 @@ const PrimaryBtn = ({
       onClick={type !== "submit" ? onClick : undefined}
       disabled={isDisabled}
       className={classNames(
-        "flex! items-center! justify-center! gap-2 rounded-sm font-medium transition-all duration-300 ease-in-out sm:text-sm sm:px-2 sm:py-2 md:px-3 md:py-2 lg:px-3 lg:py-2",
+        "flex! items-center! justify-center! gap-2! rounded-sm! font-medium! transition-all! duration-300! ease-in-out! sm:text-sm!",
+        "sm:px-2! sm:py-2! md:px-3! md:py-2! lg:px-3! lg:py-2!",
         {
           // Secondary
           "border! border-[#ed1c24]! text-[#ed1c24]! bg-white! hover:bg-[#ed1c24]! hover:text-white! cursor-pointer!":
@@ -60,7 +61,11 @@ const PrimaryBtn = ({
       title={content}
     >
       {loadingAll && (
-        <svg className="w-4 h-4 animate-spin!" fill="none" viewBox="0 0 24 24">
+        <svg
+          className="w-4! h-4! animate-spin!"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
           <circle
             className="opacity-25!"
             cx="12"
@@ -80,7 +85,7 @@ const PrimaryBtn = ({
       {!loadingAll && icon === "download" && <Download size={16} />}
       {!loadingAll && icon === "plus" && <Plus size={16} />}
       {!loadingAll && icon === "upload" && <Upload size={16} />}
-      {!loadingAll && icon === "retry" && <RefreshCw className="w-4 h-4" />}
+      {!loadingAll && icon === "retry" && <RefreshCw className="w-4! h-4!" />}
 
       {loadingAll ? loadingContent : content}
     </button>

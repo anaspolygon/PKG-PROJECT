@@ -144,7 +144,8 @@ var PrimaryBtn = ({
       onClick: type !== "submit" ? onClick : void 0,
       disabled: isDisabled,
       className: (0, import_classnames.default)(
-        "flex! items-center! justify-center! gap-2 rounded-sm font-medium transition-all duration-300 ease-in-out sm:text-sm sm:px-2 sm:py-2 md:px-3 md:py-2 lg:px-3 lg:py-2",
+        "flex! items-center! justify-center! gap-2! rounded-sm! font-medium! transition-all! duration-300! ease-in-out! sm:text-sm!",
+        "sm:px-2! sm:py-2! md:px-3! md:py-2! lg:px-3! lg:py-2!",
         {
           // Secondary
           "border! border-[#ed1c24]! text-[#ed1c24]! bg-white! hover:bg-[#ed1c24]! hover:text-white! cursor-pointer!": variant === "secondary" && !isDisabled,
@@ -162,31 +163,39 @@ var PrimaryBtn = ({
       ),
       title: content,
       children: [
-        loadingAll && /* @__PURE__ */ jsxs2("svg", { className: "w-4 h-4 animate-spin!", fill: "none", viewBox: "0 0 24 24", children: [
-          /* @__PURE__ */ jsx2(
-            "circle",
-            {
-              className: "opacity-25!",
-              cx: "12",
-              cy: "12",
-              r: "10",
-              stroke: "currentColor",
-              strokeWidth: "4"
-            }
-          ),
-          /* @__PURE__ */ jsx2(
-            "path",
-            {
-              className: "opacity-75!",
-              fill: "currentColor",
-              d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-            }
-          )
-        ] }),
+        loadingAll && /* @__PURE__ */ jsxs2(
+          "svg",
+          {
+            className: "w-4! h-4! animate-spin!",
+            fill: "none",
+            viewBox: "0 0 24 24",
+            children: [
+              /* @__PURE__ */ jsx2(
+                "circle",
+                {
+                  className: "opacity-25!",
+                  cx: "12",
+                  cy: "12",
+                  r: "10",
+                  stroke: "currentColor",
+                  strokeWidth: "4"
+                }
+              ),
+              /* @__PURE__ */ jsx2(
+                "path",
+                {
+                  className: "opacity-75!",
+                  fill: "currentColor",
+                  d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                }
+              )
+            ]
+          }
+        ),
         !loadingAll && icon === "download" && /* @__PURE__ */ jsx2(Download, { size: 16 }),
         !loadingAll && icon === "plus" && /* @__PURE__ */ jsx2(Plus, { size: 16 }),
         !loadingAll && icon === "upload" && /* @__PURE__ */ jsx2(Upload, { size: 16 }),
-        !loadingAll && icon === "retry" && /* @__PURE__ */ jsx2(RefreshCw, { className: "w-4 h-4" }),
+        !loadingAll && icon === "retry" && /* @__PURE__ */ jsx2(RefreshCw, { className: "w-4! h-4!" }),
         loadingAll ? loadingContent : content
       ]
     }
