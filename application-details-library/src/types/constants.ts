@@ -47,5 +47,7 @@ export const getApplicationStatus = (status: string): string => {
   if (status === "cbs_failed") return "CBS Failed";
   if (status === "islamic") return "Islamic";
   if (status === "conventional") return "Conventional";
+  if (status === "approved") return "Approved";
+  if (status === "rejected") return "Rejected";
   return status;
 };

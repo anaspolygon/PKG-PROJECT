@@ -128,48 +128,45 @@ import { Download, Plus, RefreshCw, Upload } from "lucide-react";
 import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
 var PrimaryBtn = ({
   onClick,
-  loadingAll,
+  loadingAll = false,
   icon,
   content,
-  loadingContent,
-  variant,
-  type,
-  disabled
+  loadingContent = "Loading...",
+  variant = "primary",
+  type = "button",
+  disabled = false
 }) => {
+  const isDisabled = loadingAll || disabled;
   return /* @__PURE__ */ jsxs2(
     "button",
     {
-      type: type || "button",
+      type,
       onClick: type !== "submit" ? onClick : void 0,
-      disabled: loadingAll || disabled,
+      disabled: isDisabled,
       className: (0, import_classnames.default)(
-        "flex sm:text-sm items-center gap-2 text-center justify-center sm:px-2 sm:py-2 md:px-3 md:py-2 lg:px-3 lg:py-2 rounded-sm font-medium transition-all duration-300 ease-in-out",
+        "flex! items-center! justify-center! gap-2 rounded-sm font-medium transition-all duration-300 ease-in-out sm:text-sm sm:px-2 sm:py-2 md:px-3 md:py-2 lg:px-3 lg:py-2",
         {
-          // Secondary variant - enabled
-          "border border-[#ed1c24] text-[#ed1c24] hover:text-white bg-white hover:bg-[#ed1c24] cursor-pointer": variant === "secondary" && !loadingAll && !disabled,
-          // Secondary variant - disabled/loading
-          "border border-[#d1d5db] text-[#9ca3af] bg-[#f3f4f6] cursor-not-allowed": variant === "secondary" && (loadingAll || disabled),
-          // Success variant - enabled
-          "text-[#22c55e] bg-[#dcfce7] hover:bg-[#22c55e] hover:text-white cursor-pointer": variant === "success" && !loadingAll && !disabled,
-          // Success variant - disabled/loading
-          "text-[#22c55e] bg-[#dcfce7] cursor-not-allowed opacity-60": variant === "success" && (loadingAll || disabled),
-          // Primary variant - enabled
-          "text-white bg-[#ed1c24] hover:bg-[#c0141b] cursor-pointer": (variant === "primary" || !variant) && !loadingAll && !disabled,
-          // Primary variant - disabled/loading
-          "text-white bg-[#9ca3af] cursor-not-allowed": (variant === "primary" || !variant) && (loadingAll || disabled),
-          // Danger variant - enabled
-          "text-[#ef4444] bg-[#fee2e2] hover:bg-[#ef4444] hover:text-white cursor-pointer": variant === "danger" && !loadingAll && !disabled,
-          // Danger variant - disabled
-          "text-[#ef4444] bg-[#fee2e2] cursor-not-allowed opacity-60": variant === "danger" && (loadingAll || disabled)
+          // Secondary
+          "border! border-[#ed1c24]! text-[#ed1c24]! bg-white! hover:bg-[#ed1c24]! hover:text-white! cursor-pointer!": variant === "secondary" && !isDisabled,
+          "border! border-gray-300! text-gray-400! bg-gray-100! cursor-not-allowed!": variant === "secondary" && isDisabled,
+          // Success
+          "text-[#22c55e]! bg-[#dcfce7]! hover:bg-[#22c55e]! hover:text-white! cursor-pointer!": variant === "success" && !isDisabled,
+          "text-[#22c55e]! bg-[#dcfce7]! opacity-60! cursor-not-allowed!": variant === "success" && isDisabled,
+          // Primary
+          "text-white! bg-[#ed1c24]! hover:bg-[#c0141b]! cursor-pointer!": variant === "primary" && !isDisabled,
+          "text-white! bg-gray-400! cursor-not-allowed!": variant === "primary" && isDisabled,
+          // Danger
+          "text-[#ef4444]! bg-[#fee2e2]! hover:bg-[#ef4444]! hover:text-white! cursor-pointer!": variant === "danger" && !isDisabled,
+          "text-[#ef4444]! bg-[#fee2e2]! opacity-60! cursor-not-allowed!": variant === "danger" && isDisabled
         }
       ),
       title: content,
       children: [
-        loadingAll && /* @__PURE__ */ jsxs2("svg", { className: "w-4 h-4 animate-spin", fill: "none", viewBox: "0 0 24 24", children: [
+        loadingAll && /* @__PURE__ */ jsxs2("svg", { className: "w-4 h-4 animate-spin!", fill: "none", viewBox: "0 0 24 24", children: [
           /* @__PURE__ */ jsx2(
             "circle",
             {
-              className: "opacity-25",
+              className: "opacity-25!",
               cx: "12",
               cy: "12",
               r: "10",
@@ -180,7 +177,7 @@ var PrimaryBtn = ({
           /* @__PURE__ */ jsx2(
             "path",
             {
-              className: "opacity-75",
+              className: "opacity-75!",
               fill: "currentColor",
               d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
             }
@@ -555,6 +552,8 @@ var getApplicationStatus = (status) => {
   if (status === "cbs_failed") return "CBS Failed";
   if (status === "islamic") return "Islamic";
   if (status === "conventional") return "Conventional";
+  if (status === "approved") return "Approved";
+  if (status === "rejected") return "Rejected";
   return status;
 };
 

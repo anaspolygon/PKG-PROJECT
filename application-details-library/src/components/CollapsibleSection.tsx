@@ -103,7 +103,7 @@ const CollapsibleSectionsContainer: React.FC<
         item.section_slug === "nid" ? (
           <Images images={item.value} />
         ) : item.section_slug === "address_information" ? (
-          <Address fields={item.fields}  />
+          <Address fields={item.fields} />
         ) : (
           <FormSection
             fields={item.fields}
