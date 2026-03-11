@@ -12,9 +12,9 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { selectStyles } from "./FormSelect";
 interface Props {
   apiKey: string;
-  url?: string;
+  baseUrl: string;
 }
-const ApplicationSection = ({ apiKey, url }: Props) => {
+const ApplicationSection = ({ apiKey, baseUrl }: Props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const {
     error,
@@ -38,14 +38,14 @@ const ApplicationSection = ({ apiKey, url }: Props) => {
     setSearchTerm,
     setProductType,
     setBankingType,
-  } = useGetApplicationList(currentPage, apiKey, url);
+  } = useGetApplicationList(currentPage, apiKey, baseUrl);
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const info = useLocalStorage("info");
   const [searchError, setSearchError] = useState<string | null>(null);
-  const { products } = useProductList();
+  const { products } = useProductList(1, baseUrl);
   const productOptions = (products ?? []).map((item) => ({
     value: item.value,
     label: item.label,

@@ -3,10 +3,13 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { ApplicationList } from "../types/ApplicationTypes";
-import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 
-const useGetApplicationList = (page: number, apiKey: string, url?: string) => {
+const useGetApplicationList = (
+  page: number,
+  apiKey: string,
+  baseUrl: string,
+) => {
   const today = dayjs().format("YYYY-MM-DD");
   const sixMonthsAgo = dayjs().subtract(6, "month").format("YYYY-MM-DD");
   const [data, setData] = useState<ApplicationList | null>(null);
@@ -21,7 +24,6 @@ const useGetApplicationList = (page: number, apiKey: string, url?: string) => {
   const [productType, setProductType] = useState("");
   const [onboardingType, setOnboardingType] = useState("");
   const [status, setStatus] = useState("");
-  const router = useRouter();
 
   useEffect(() => {
     setIdentifier(searchTerm);
@@ -41,10 +43,9 @@ const useGetApplicationList = (page: number, apiKey: string, url?: string) => {
     if (status) params.append("status", status);
     if (gender) params.append("gender", gender);
     if (productType) params.append("product_type", productType);
-    const defaultUrl = `${process.env.NEXT_PUBLIC_API_ADMIN_BASE_URL}/api/admin/applications`;
-    const api = url ?? defaultUrl;
+    const url = `${baseUrl}/api/admin/applications`;
     try {
-      const res = await fetch(api + "?" + params.toString(), {
+      const res = await fetch(url + "?" + params.toString(), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -52,35 +53,16 @@ const useGetApplicationList = (page: number, apiKey: string, url?: string) => {
         },
       });
       const data = await res.json();
+      if (res.status === 401) {
+        window.location.reload();
+        return;
+      }
       setData(data);
     } catch (error) {
       console.error("Error fetching application:", error);
     } finally {
       setLoading(false);
     }
-
-    // try {
-    //   const res = await fetch(preloadUrl, {
-    //     method: "GET",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "x-api-key": apiKey,
-    //     },
-    //   });
-    //   const preload = await res.json();
-    //   const localPreload = JSON.parse(
-    //     localStorage.getItem("preload") as string,
-    //   );
-    //   if (localPreload.version !== preload.version) {
-    //     localStorage.removeItem("preload");
-    //     localStorage.setItem("preload", JSON.stringify(preload));
-    //   }
-    //   if (!localPreload) {
-    //     localStorage.setItem("preload", JSON.stringify(preload));
-    //   }
-    // } catch (error) {
-    //   console.error("Error fetching application:", error);
-    // }
   }, [
     page,
     identifier,
@@ -90,8 +72,7 @@ const useGetApplicationList = (page: number, apiKey: string, url?: string) => {
     status,
     gender,
     productType,
-    router,
-    url,
+    baseUrl,
     apiKey,
   ]);
 

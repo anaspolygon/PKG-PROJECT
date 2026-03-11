@@ -1,31 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { ProductList } from "../types/ProductTypes";
 
-const useProductList = (page = 1) => {
+const useProductList = (page = 1, baseUrl: string) => {
   const [data, setData] = useState<ProductList | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const router = useRouter();
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
 
     try {
-      const res = await fetch(
-        "https://city-api.dev-polygontech.xyz/api/admin/products-for-filter?",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key":
-              "mangeD01axB3sBDM3HwRmh2MmO4hQ5aXyXpCLOwp8QRYKymrgyCaaFwJciTgWqzz",
-          },
+      const res = await fetch(`${baseUrl}/api/admin/products-for-filter`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key":
+            "mangeD01axB3sBDM3HwRmh2MmO4hQ5aXyXpCLOwp8QRYKymrgyCaaFwJciTgWqzz",
         },
-      );
+      });
+      if (res.status === 401) {
+        window.location.reload();
+        return;
+      }
       const data = await res.json();
       setData(data as ProductList);
     } catch (err) {
@@ -33,7 +32,7 @@ const useProductList = (page = 1) => {
     } finally {
       setLoading(false);
     }
-  }, [page, searchTerm, router]);
+  }, [page, searchTerm, baseUrl]);
 
   useEffect(() => {
     fetchProducts();
