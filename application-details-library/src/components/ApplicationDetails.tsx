@@ -47,7 +47,7 @@ export default function ApplicationDetails({
         const data = await res.json();
         setApplication(data);
       } catch (error) {
-        console.error("Error fetching application:", error);
+        console.error("error:", error);
       } finally {
         setLoading(false);
       }
@@ -114,7 +114,8 @@ export default function ApplicationDetails({
 
       if (!res.ok) {
         const errorText = await res.text();
-        console.error("PDF download error:", errorText);
+        toast.error(errorText);
+        console.error("error:", errorText);
         return;
       }
 
@@ -128,7 +129,7 @@ export default function ApplicationDetails({
       a.remove();
       window.URL.revokeObjectURL(url);
     } catch (e: any) {
-      console.error("PDF fetch error:", e);
+      console.error("error:", e);
     } finally {
       setPdfDownloadLoading(false);
     }
@@ -153,6 +154,7 @@ export default function ApplicationDetails({
 
       if (!res.ok) {
         const text = await res.text();
+        toast.error(text);
         return;
       }
       const zipBlob = await res.blob();
@@ -165,7 +167,7 @@ export default function ApplicationDetails({
       a.remove();
       window.URL.revokeObjectURL(url);
     } catch (e: any) {
-      console.error("ZIP fetch error:", e);
+      console.error("error:", e);
     } finally {
       setDocumentsDownloadLoading(false);
     }
@@ -181,6 +183,7 @@ export default function ApplicationDetails({
           "x-api-key": apiKey,
         },
         cache: "no-store",
+        body: null,
       });
 
       if (res.status == 401) {
@@ -214,6 +217,7 @@ export default function ApplicationDetails({
           "x-api-key": apiKey,
         },
         cache: "no-store",
+        body: null,
       });
 
       if (res.status == 401) {
