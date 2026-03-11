@@ -1,47 +1,117 @@
 "use client";
-import React from "react";
-import { getNidNo } from "../helpers/ApplicationDetailsHelper";
-import CollapsibleSectionsContainer from "./CollapsibleSection";
-import { ApplicationDetailsRoot } from "../types/ApplicationDetailsType";
-import { AddressData } from "./Address";
-import { Button } from "./button";
+import { useEffect, useState } from "react";
+import Loader from "./Loader";
 import PrimaryBtn from "./PrimaryBtn";
+import ApplicationDetailsContainer from "./ApplicationDetailsContainer";
 
-export interface ApplicationDetailsProps {
-  application: ApplicationDetailsRoot;
+interface ApplicationDetailsProps {
+  id: string | number;
+  baseUrl: string;
   preloadKey?: string;
-  title?: string;
-  showTitle?: boolean;
+  showActionsBtn?: boolean;
+  loadingApprove?: boolean;
+  loadingReject?: boolean;
+  handleApprove?: () => void;
+  handleReject?: () => void;
+  apiKey: string;
 }
 
-const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({
-  application,
+export default function ApplicationDetails({
+  id,
+  baseUrl,
   preloadKey,
-  title = "Application Details",
-  showTitle = true,
-}) => {
-  const nidNo = getNidNo(application?.application_data);
+  showActionsBtn,
+  loadingApprove,
+  loadingReject,
+  handleApprove,
+  handleReject,
+  apiKey,
+}: ApplicationDetailsProps) {
+  const [application, setApplication] = useState({});
+  const [loading, setLoading] = useState(true);
 
+  const detailsUrl = `${baseUrl}/api/application/${id}`;
+  const preloadUrl = `${baseUrl}/api/preload-data`;
+
+  useEffect(() => {
+    const fetchApplication = async () => {
+      try {
+        const res = await fetch(detailsUrl, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": apiKey,
+          },
+        });
+        const data = await res.json();
+        setApplication(data);
+      } catch (error) {
+        console.error("Error fetching application:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchApplication();
+  }, [detailsUrl, apiKey]);
+
+  useEffect(() => {
+    const callPreloadApi = async () => {
+      try {
+        const res = await fetch(preloadUrl, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": apiKey,
+          },
+        });
+        const preload = await res.json();
+        const localPreload = JSON.parse(
+          localStorage.getItem("preload") as string,
+        );
+
+        if (localPreload && localPreload.version !== preload.version) {
+          localStorage.removeItem("preload");
+          localStorage.setItem("preload", JSON.stringify(preload));
+        }
+        if (!localPreload) {
+          localStorage.setItem("preload", JSON.stringify(preload));
+        }
+      } catch (error) {
+        console.error("Error fetching application:", error);
+      }
+    };
+    callPreloadApi();
+  }, [preloadUrl, apiKey]);
+
+  if (loading) return <Loader />;
   return (
-    <div>
-      {showTitle && (
-        <>
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">{title}</h1>
-          </div>
-          <hr className="text-gray-300 py-2" />
-        </>
-      )}
-      <div className="flex flex-col gap-4">
-        <CollapsibleSectionsContainer
-          application={application}
-          nidNo={nidNo}
-          preloadKey={preloadKey}
-        />
+    <>
+      <ApplicationDetailsContainer
+        application={application}
+        preloadKey={preloadKey}
+        title="Application Details"
+        showTitle={false}
+      />
+      <div className="flex mt-5 justify-end items-center gap-2">
+        {showActionsBtn ? (
+          <>
+            <PrimaryBtn
+              onClick={handleApprove}
+              variant="success"
+              content="Approve"
+              loadingAll={loadingApprove as boolean}
+              loadingContent={"Approving..."}
+            />
+            <PrimaryBtn
+              onClick={handleReject}
+              variant="danger"
+              content="Reject"
+              loadingAll={loadingReject as boolean}
+              loadingContent={"Rejecting..."}
+            />
+          </>
+        ) : null}
       </div>
-     
-    </div>
+    </>
   );
-};
-
-export default ApplicationDetails;
+}

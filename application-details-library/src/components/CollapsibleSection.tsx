@@ -126,10 +126,10 @@ const CollapsibleSectionsContainer: React.FC<
   return (
     <>
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-2">
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-6 w-full">
           <div className="flex flex-col gap-4">
             <div className="flex gap-4">
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <div className="relative">
                   <Image
                     width={280}
