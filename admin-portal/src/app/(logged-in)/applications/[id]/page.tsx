@@ -1,4 +1,5 @@
 import { ApplicationDetails } from "@polygontech/application-details";
+import "@polygontech/application-details/dist/index.css";
 import React from "react";
 
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
