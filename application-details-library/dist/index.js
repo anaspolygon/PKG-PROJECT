@@ -1050,7 +1050,7 @@ function ApplicationDetails({
         const data = await res.json();
         setApplication(data);
       } catch (error) {
-        console.error("Error fetching application:", error);
+        console.error("error:", error);
       } finally {
         setLoading(false);
       }
@@ -1110,7 +1110,8 @@ function ApplicationDetails({
       }
       if (!res.ok) {
         const errorText = await res.text();
-        console.error("PDF download error:", errorText);
+        import_sonner2.toast.error(errorText);
+        console.error("error:", errorText);
         return;
       }
       const pdfBlob = await res.blob();
@@ -1123,7 +1124,7 @@ function ApplicationDetails({
       a.remove();
       window.URL.revokeObjectURL(url);
     } catch (e) {
-      console.error("PDF fetch error:", e);
+      console.error("error:", e);
     } finally {
       setPdfDownloadLoading(false);
     }
@@ -1145,6 +1146,7 @@ function ApplicationDetails({
       }
       if (!res.ok) {
         const text = await res.text();
+        import_sonner2.toast.error(text);
         return;
       }
       const zipBlob = await res.blob();
@@ -1157,7 +1159,7 @@ function ApplicationDetails({
       a.remove();
       window.URL.revokeObjectURL(url);
     } catch (e) {
-      console.error("ZIP fetch error:", e);
+      console.error("error:", e);
     } finally {
       setDocumentsDownloadLoading(false);
     }
@@ -1171,7 +1173,8 @@ function ApplicationDetails({
         headers: {
           "x-api-key": apiKey
         },
-        cache: "no-store"
+        cache: "no-store",
+        body: null
       });
       if (res.status == 401) {
         window.location.reload();
@@ -1201,7 +1204,8 @@ function ApplicationDetails({
         headers: {
           "x-api-key": apiKey
         },
-        cache: "no-store"
+        cache: "no-store",
+        body: null
       });
       if (res.status == 401) {
         window.location.reload();
@@ -1627,26 +1631,25 @@ var DateFilter_default = DateFilter;
 
 // src/hooks/useProductList.ts
 var import_react4 = require("react");
-var import_navigation = require("next/navigation");
-var useProductList = (page = 1) => {
+var useProductList = (page = 1, baseUrl) => {
   const [data, setData] = (0, import_react4.useState)(null);
   const [loading, setLoading] = (0, import_react4.useState)(true);
   const [error, setError] = (0, import_react4.useState)(null);
   const [searchTerm, setSearchTerm] = (0, import_react4.useState)("");
-  const router = (0, import_navigation.useRouter)();
   const fetchProducts = (0, import_react4.useCallback)(async () => {
     setLoading(true);
     try {
-      const res = await fetch(
-        "https://city-api.dev-polygontech.xyz/api/admin/products-for-filter?",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": "mangeD01axB3sBDM3HwRmh2MmO4hQ5aXyXpCLOwp8QRYKymrgyCaaFwJciTgWqzz"
-          }
+      const res = await fetch(`${baseUrl}/api/admin/products-for-filter`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "mangeD01axB3sBDM3HwRmh2MmO4hQ5aXyXpCLOwp8QRYKymrgyCaaFwJciTgWqzz"
         }
-      );
+      });
+      if (res.status === 401) {
+        window.location.reload();
+        return;
+      }
       const data2 = await res.json();
       setData(data2);
     } catch (err) {
@@ -1654,7 +1657,7 @@ var useProductList = (page = 1) => {
     } finally {
       setLoading(false);
     }
-  }, [page, searchTerm, router]);
+  }, [page, searchTerm, baseUrl]);
   (0, import_react4.useEffect)(() => {
     fetchProducts();
   }, [fetchProducts]);
@@ -1888,9 +1891,8 @@ var PaginationWrapper_default = PaginationWrapper;
 
 // src/hooks/useGetApplicationList.ts
 var import_react5 = require("react");
-var import_navigation2 = require("next/navigation");
 var import_dayjs2 = __toESM(require("dayjs"));
-var useGetApplicationList = (page, apiKey, url) => {
+var useGetApplicationList = (page, apiKey, baseUrl) => {
   const today = (0, import_dayjs2.default)().format("YYYY-MM-DD");
   const sixMonthsAgo = (0, import_dayjs2.default)().subtract(6, "month").format("YYYY-MM-DD");
   const [data, setData] = (0, import_react5.useState)(null);
@@ -1905,7 +1907,6 @@ var useGetApplicationList = (page, apiKey, url) => {
   const [productType, setProductType] = (0, import_react5.useState)("");
   const [onboardingType, setOnboardingType] = (0, import_react5.useState)("");
   const [status, setStatus] = (0, import_react5.useState)("");
-  const router = (0, import_navigation2.useRouter)();
   (0, import_react5.useEffect)(() => {
     setIdentifier(searchTerm);
   }, [searchTerm]);
@@ -1922,10 +1923,9 @@ var useGetApplicationList = (page, apiKey, url) => {
     if (status) params.append("status", status);
     if (gender) params.append("gender", gender);
     if (productType) params.append("product_type", productType);
-    const defaultUrl = `${process.env.NEXT_PUBLIC_API_ADMIN_BASE_URL}/api/admin/applications`;
-    const api = url ?? defaultUrl;
+    const url = `${baseUrl}/api/admin/applications`;
     try {
-      const res = await fetch(api + "?" + params.toString(), {
+      const res = await fetch(url + "?" + params.toString(), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -1933,6 +1933,10 @@ var useGetApplicationList = (page, apiKey, url) => {
         }
       });
       const data2 = await res.json();
+      if (res.status === 401) {
+        window.location.reload();
+        return;
+      }
       setData(data2);
     } catch (error2) {
       console.error("Error fetching application:", error2);
@@ -1948,8 +1952,7 @@ var useGetApplicationList = (page, apiKey, url) => {
     status,
     gender,
     productType,
-    router,
-    url,
+    baseUrl,
     apiKey
   ]);
   const setSearchTermWithErrorClear = (0, import_react5.useCallback)(
@@ -2041,7 +2044,7 @@ var selectStyles = {
 
 // src/components/ApplicationSection.tsx
 var import_jsx_runtime17 = require("react/jsx-runtime");
-var ApplicationSection = ({ apiKey, url }) => {
+var ApplicationSection = ({ apiKey, baseUrl }) => {
   const [currentPage, setCurrentPage] = (0, import_react6.useState)(1);
   const {
     error,
@@ -2065,14 +2068,14 @@ var ApplicationSection = ({ apiKey, url }) => {
     setSearchTerm,
     setProductType,
     setBankingType
-  } = useGetApplicationList_default(currentPage, apiKey, url);
+  } = useGetApplicationList_default(currentPage, apiKey, baseUrl);
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const info = useLocalStorage("info");
   const [searchError, setSearchError] = (0, import_react6.useState)(null);
-  const { products } = useProductList_default();
+  const { products } = useProductList_default(1, baseUrl);
   const productOptions = (products ?? []).map((item) => ({
     value: item.value,
     label: item.label

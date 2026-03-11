@@ -10,8 +10,8 @@ declare function ApplicationDetails({ id, baseUrl, showActionsBtn, apiKey, }: Ap
 
 interface Props {
     apiKey: string;
-    url?: string;
+    baseUrl: string;
 }
-declare const ApplicationSection: ({ apiKey, url }: Props) => react_jsx_runtime.JSX.Element;
+declare const ApplicationSection: ({ apiKey, baseUrl }: Props) => react_jsx_runtime.JSX.Element;
 
 export { ApplicationDetails, ApplicationSection };

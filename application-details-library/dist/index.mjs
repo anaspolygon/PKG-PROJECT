@@ -1036,7 +1036,7 @@ function ApplicationDetails({
         const data = await res.json();
         setApplication(data);
       } catch (error) {
-        console.error("Error fetching application:", error);
+        console.error("error:", error);
       } finally {
         setLoading(false);
       }
@@ -1096,7 +1096,8 @@ function ApplicationDetails({
       }
       if (!res.ok) {
         const errorText = await res.text();
-        console.error("PDF download error:", errorText);
+        toast.error(errorText);
+        console.error("error:", errorText);
         return;
       }
       const pdfBlob = await res.blob();
@@ -1109,7 +1110,7 @@ function ApplicationDetails({
       a.remove();
       window.URL.revokeObjectURL(url);
     } catch (e) {
-      console.error("PDF fetch error:", e);
+      console.error("error:", e);
     } finally {
       setPdfDownloadLoading(false);
     }
@@ -1131,6 +1132,7 @@ function ApplicationDetails({
       }
       if (!res.ok) {
         const text = await res.text();
+        toast.error(text);
         return;
       }
       const zipBlob = await res.blob();
@@ -1143,7 +1145,7 @@ function ApplicationDetails({
       a.remove();
       window.URL.revokeObjectURL(url);
     } catch (e) {
-      console.error("ZIP fetch error:", e);
+      console.error("error:", e);
     } finally {
       setDocumentsDownloadLoading(false);
     }
@@ -1157,7 +1159,8 @@ function ApplicationDetails({
         headers: {
           "x-api-key": apiKey
         },
-        cache: "no-store"
+        cache: "no-store",
+        body: null
       });
       if (res.status == 401) {
         window.location.reload();
@@ -1187,7 +1190,8 @@ function ApplicationDetails({
         headers: {
           "x-api-key": apiKey
         },
-        cache: "no-store"
+        cache: "no-store",
+        body: null
       });
       if (res.status == 401) {
         window.location.reload();
@@ -1613,26 +1617,25 @@ var DateFilter_default = DateFilter;
 
 // src/hooks/useProductList.ts
 import { useEffect as useEffect3, useState as useState4, useCallback } from "react";
-import { useRouter } from "next/navigation";
-var useProductList = (page = 1) => {
+var useProductList = (page = 1, baseUrl) => {
   const [data, setData] = useState4(null);
   const [loading, setLoading] = useState4(true);
   const [error, setError] = useState4(null);
   const [searchTerm, setSearchTerm] = useState4("");
-  const router = useRouter();
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(
-        "https://city-api.dev-polygontech.xyz/api/admin/products-for-filter?",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": "mangeD01axB3sBDM3HwRmh2MmO4hQ5aXyXpCLOwp8QRYKymrgyCaaFwJciTgWqzz"
-          }
+      const res = await fetch(`${baseUrl}/api/admin/products-for-filter`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "mangeD01axB3sBDM3HwRmh2MmO4hQ5aXyXpCLOwp8QRYKymrgyCaaFwJciTgWqzz"
         }
-      );
+      });
+      if (res.status === 401) {
+        window.location.reload();
+        return;
+      }
       const data2 = await res.json();
       setData(data2);
     } catch (err) {
@@ -1640,7 +1643,7 @@ var useProductList = (page = 1) => {
     } finally {
       setLoading(false);
     }
-  }, [page, searchTerm, router]);
+  }, [page, searchTerm, baseUrl]);
   useEffect3(() => {
     fetchProducts();
   }, [fetchProducts]);
@@ -1874,9 +1877,8 @@ var PaginationWrapper_default = PaginationWrapper;
 
 // src/hooks/useGetApplicationList.ts
 import { useEffect as useEffect4, useState as useState5, useCallback as useCallback2 } from "react";
-import { useRouter as useRouter2 } from "next/navigation";
 import dayjs2 from "dayjs";
-var useGetApplicationList = (page, apiKey, url) => {
+var useGetApplicationList = (page, apiKey, baseUrl) => {
   const today = dayjs2().format("YYYY-MM-DD");
   const sixMonthsAgo = dayjs2().subtract(6, "month").format("YYYY-MM-DD");
   const [data, setData] = useState5(null);
@@ -1891,7 +1893,6 @@ var useGetApplicationList = (page, apiKey, url) => {
   const [productType, setProductType] = useState5("");
   const [onboardingType, setOnboardingType] = useState5("");
   const [status, setStatus] = useState5("");
-  const router = useRouter2();
   useEffect4(() => {
     setIdentifier(searchTerm);
   }, [searchTerm]);
@@ -1908,10 +1909,9 @@ var useGetApplicationList = (page, apiKey, url) => {
     if (status) params.append("status", status);
     if (gender) params.append("gender", gender);
     if (productType) params.append("product_type", productType);
-    const defaultUrl = `${process.env.NEXT_PUBLIC_API_ADMIN_BASE_URL}/api/admin/applications`;
-    const api = url ?? defaultUrl;
+    const url = `${baseUrl}/api/admin/applications`;
     try {
-      const res = await fetch(api + "?" + params.toString(), {
+      const res = await fetch(url + "?" + params.toString(), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -1919,6 +1919,10 @@ var useGetApplicationList = (page, apiKey, url) => {
         }
       });
       const data2 = await res.json();
+      if (res.status === 401) {
+        window.location.reload();
+        return;
+      }
       setData(data2);
     } catch (error2) {
       console.error("Error fetching application:", error2);
@@ -1934,8 +1938,7 @@ var useGetApplicationList = (page, apiKey, url) => {
     status,
     gender,
     productType,
-    router,
-    url,
+    baseUrl,
     apiKey
   ]);
   const setSearchTermWithErrorClear = useCallback2(
@@ -2027,7 +2030,7 @@ var selectStyles = {
 
 // src/components/ApplicationSection.tsx
 import { Fragment as Fragment6, jsx as jsx17, jsxs as jsxs13 } from "react/jsx-runtime";
-var ApplicationSection = ({ apiKey, url }) => {
+var ApplicationSection = ({ apiKey, baseUrl }) => {
   const [currentPage, setCurrentPage] = useState6(1);
   const {
     error,
@@ -2051,14 +2054,14 @@ var ApplicationSection = ({ apiKey, url }) => {
     setSearchTerm,
     setProductType,
     setBankingType
-  } = useGetApplicationList_default(currentPage, apiKey, url);
+  } = useGetApplicationList_default(currentPage, apiKey, baseUrl);
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const info = useLocalStorage("info");
   const [searchError, setSearchError] = useState6(null);
-  const { products } = useProductList_default();
+  const { products } = useProductList_default(1, baseUrl);
   const productOptions = (products ?? []).map((item) => ({
     value: item.value,
     label: item.label
