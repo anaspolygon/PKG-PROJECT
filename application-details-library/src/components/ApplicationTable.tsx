@@ -2,7 +2,6 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import clsx from "clsx";
 import { Tooltip } from "antd";
 import { Eye } from "lucide-react";
@@ -10,7 +9,13 @@ import Table from "./table";
 import { Application } from "../types/ApplicationTypes";
 import { getApplicationStatus, getBankingType } from "../helpers/StringHelper";
 import { formatDateWithTime } from "../helpers/date";
-import { ApplicationStatusBgColors, ApplicationStatusTextColors, BankType, BankTypeBgColors, BankTypeTextColors } from "../constants/enums-with-colors";
+import {
+  ApplicationStatusBgColors,
+  ApplicationStatusTextColors,
+  BankType,
+  BankTypeBgColors,
+  BankTypeTextColors,
+} from "../constants/enums-with-colors";
 import { ApplicationStatus } from "../types/constants";
 interface ApplicationTableProps {
   canDownloadPdf: boolean;
@@ -112,7 +117,7 @@ const ApplicationTable = ({ data }: ApplicationTableProps) => {
         ) {
           return (
             <div className="flex gap-3  items-center">
-              <Link
+              <a
                 className="px-2 py-2 bg-purple-100 text-purple-500 hover:bg-purple-400 hover:text-white rounded-md shadow flex items-center cursor-pointer transition-all duration-300 ease-in-out"
                 href={`/applications/${record.id}`}
               >
@@ -122,7 +127,7 @@ const ApplicationTable = ({ data }: ApplicationTableProps) => {
                 >
                   <Eye className="w-4 h-4" />
                 </button>
-              </Link>
+              </a>
             </div>
           );
         }
