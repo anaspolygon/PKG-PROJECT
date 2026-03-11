@@ -124,7 +124,7 @@ var Loader_default = Loader;
 // src/components/PrimaryBtn.tsx
 var import_classnames = __toESM(require_classnames());
 import { Download, Plus, RefreshCw, Upload } from "lucide-react";
-import { Fragment, jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
+import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
 var PrimaryBtn = ({
   onClick,
   loadingAll,
@@ -135,47 +135,64 @@ var PrimaryBtn = ({
   type,
   disabled
 }) => {
-  return /* @__PURE__ */ jsx2(Fragment, { children: /* @__PURE__ */ jsxs2(
+  return /* @__PURE__ */ jsxs2(
     "button",
     {
       type: type || "button",
       onClick: type !== "submit" ? onClick : void 0,
       disabled: loadingAll || disabled,
       className: (0, import_classnames.default)(
-        "flex sm:text-sm  items-center gap-2 text-center  justify-center",
+        "flex sm:text-sm items-center gap-2 text-center justify-center sm:px-2 sm:py-2 md:px-3 md:py-2 lg:px-3 lg:py-2 rounded-sm font-medium transition-all duration-300 ease-in-out",
         {
           // Secondary variant - enabled
-          "border border-primary text-primary hover:text-white bg-white hover:bg-primary cursor-pointer": variant === "secondary" && !loadingAll && !disabled,
+          "border border-[#ed1c24] text-[#ed1c24] hover:text-white bg-white hover:bg-[#ed1c24] cursor-pointer": variant === "secondary" && !loadingAll && !disabled,
           // Secondary variant - disabled/loading
-          "border border-gray-300 text-gray-400 bg-gray-100 cursor-not-allowed": variant === "secondary" && (loadingAll || disabled),
+          "border border-[#d1d5db] text-[#9ca3af] bg-[#f3f4f6] cursor-not-allowed": variant === "secondary" && (loadingAll || disabled),
           // Success variant - enabled
-          "text-green-500 bg-green-100 hover:bg-green-500 hover:text-white  transform cursor-pointer transition-all duration-300 ease-in-out": variant === "success" && !loadingAll && !disabled,
+          "text-[#22c55e] bg-[#dcfce7] hover:bg-[#22c55e] hover:text-white cursor-pointer": variant === "success" && !loadingAll && !disabled,
           // Success variant - disabled/loading
-          "text-green-500 bg-green-100 cursor-not-allowed": variant === "success" && (loadingAll || disabled),
+          "text-[#22c55e] bg-[#dcfce7] cursor-not-allowed opacity-60": variant === "success" && (loadingAll || disabled),
           // Primary variant - enabled
-          "text-white bg-primary hover:bg-red-700 cursor-pointer": (variant === "primary" || !variant) && !loadingAll && !disabled,
+          "text-white bg-[#ed1c24] hover:bg-[#c0141b] cursor-pointer": (variant === "primary" || !variant) && !loadingAll && !disabled,
           // Primary variant - disabled/loading
-          "text-white bg-gray-400 cursor-not-allowed": (variant === "primary" || !variant) && (loadingAll || disabled),
-          "text-red-500 bg-red-100 hover:bg-red-500 hover:text-white  transform cursor-pointer transition-all duration-300 ease-in-out": (variant === "danger" || !variant) && !loadingAll && !disabled,
-          "text-red-500 bg-red-100 transform cursor-not-allowed": (variant === "danger" || !variant) && !loadingAll && disabled
-        },
-        "sm:px-2 sm:py-2 md:px-3 md:py-2 lg:px-3 lg:py-2 rounded-sm font-medium transition-all duration-300 ease-in-out"
+          "text-white bg-[#9ca3af] cursor-not-allowed": (variant === "primary" || !variant) && (loadingAll || disabled),
+          // Danger variant - enabled
+          "text-[#ef4444] bg-[#fee2e2] hover:bg-[#ef4444] hover:text-white cursor-pointer": variant === "danger" && !loadingAll && !disabled,
+          // Danger variant - disabled
+          "text-[#ef4444] bg-[#fee2e2] cursor-not-allowed opacity-60": variant === "danger" && (loadingAll || disabled)
+        }
       ),
       title: content,
       children: [
-        icon === "download" && /* @__PURE__ */ jsx2(Download, { size: 16 }),
-        icon === "plus" && /* @__PURE__ */ jsx2(Plus, { size: 16 }),
-        icon === "upload" && /* @__PURE__ */ jsx2(Upload, { size: 16 }),
-        icon === "retry" && /* @__PURE__ */ jsx2(
-          RefreshCw,
-          {
-            className: `w-4 h-4 ${loadingAll ? "animate-spin" : ""}`
-          }
-        ),
+        loadingAll && /* @__PURE__ */ jsxs2("svg", { className: "w-4 h-4 animate-spin", fill: "none", viewBox: "0 0 24 24", children: [
+          /* @__PURE__ */ jsx2(
+            "circle",
+            {
+              className: "opacity-25",
+              cx: "12",
+              cy: "12",
+              r: "10",
+              stroke: "currentColor",
+              strokeWidth: "4"
+            }
+          ),
+          /* @__PURE__ */ jsx2(
+            "path",
+            {
+              className: "opacity-75",
+              fill: "currentColor",
+              d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+            }
+          )
+        ] }),
+        !loadingAll && icon === "download" && /* @__PURE__ */ jsx2(Download, { size: 16 }),
+        !loadingAll && icon === "plus" && /* @__PURE__ */ jsx2(Plus, { size: 16 }),
+        !loadingAll && icon === "upload" && /* @__PURE__ */ jsx2(Upload, { size: 16 }),
+        !loadingAll && icon === "retry" && /* @__PURE__ */ jsx2(RefreshCw, { className: "w-4 h-4" }),
         loadingAll ? loadingContent : content
       ]
     }
-  ) });
+  );
 };
 var PrimaryBtn_default = PrimaryBtn;
 
@@ -373,7 +390,7 @@ function useAddress(key = "preload") {
 }
 
 // src/components/Address.tsx
-import { Fragment as Fragment2, jsx as jsx4, jsxs as jsxs4 } from "react/jsx-runtime";
+import { Fragment, jsx as jsx4, jsxs as jsxs4 } from "react/jsx-runtime";
 function Address({ fields, addressData, preloadKey }) {
   const { divisions, districts, thanas, postal_codes } = useAddress(preloadKey);
   const getValue = (field) => {
@@ -476,7 +493,7 @@ function Address({ fields, addressData, preloadKey }) {
       ] }),
       /* @__PURE__ */ jsx4(FormSection, { fields: permanentAddressFields })
     ] }),
-    otherFields.length > 0 && !isSameAsPresentAddress && /* @__PURE__ */ jsx4(Fragment2, { children: /* @__PURE__ */ jsxs4("div", { className: "bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100", children: [
+    otherFields.length > 0 && !isSameAsPresentAddress && /* @__PURE__ */ jsx4(Fragment, { children: /* @__PURE__ */ jsxs4("div", { className: "bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100", children: [
       /* @__PURE__ */ jsxs4("div", { className: "flex items-center gap-2 mb-4", children: [
         /* @__PURE__ */ jsx4(
           "svg",
@@ -542,7 +559,7 @@ var getApplicationStatus = (status) => {
 
 // src/components/CollapsibleSection.tsx
 import { CircleCheckBig, CircleX } from "lucide-react";
-import { Fragment as Fragment3, jsx as jsx5, jsxs as jsxs5 } from "react/jsx-runtime";
+import { Fragment as Fragment2, jsx as jsx5, jsxs as jsxs5 } from "react/jsx-runtime";
 var CollapsibleSectionsContainer = ({ application, preloadKey }) => {
   const getValue = (field) => {
     if (["dropdown", "radio"].includes(field.input_type) && (field.possible_values ?? []).length > 0) {
@@ -607,8 +624,40 @@ var CollapsibleSectionsContainer = ({ application, preloadKey }) => {
   const formatValue = (value) => {
     return value ? value.split("_").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ") : null;
   };
-  return /* @__PURE__ */ jsxs5(Fragment3, { children: [
-    /* @__PURE__ */ jsx5("div", { className: "bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-2", children: /* @__PURE__ */ jsxs5("div", { className: "flex flex-col 2xl:flex-row 2xl:gap-6", children: [
+  return /* @__PURE__ */ jsxs5(Fragment2, { children: [
+    /* @__PURE__ */ jsxs5("div", { className: "flex justify-between items-center", children: [
+      /* @__PURE__ */ jsx5("h1", { className: "text-2xl font-bold", children: "Application Details" }),
+      /* @__PURE__ */ jsx5("div", { className: "flex items-center gap-4", children: /* @__PURE__ */ jsxs5(Fragment2, { children: [
+        /* @__PURE__ */ jsx5(
+          PrimaryBtn_default,
+          {
+            variant: "secondary",
+            type: "button",
+            onClick: () => {
+            },
+            loadingAll: false,
+            icon: "download",
+            content: "Download PDF",
+            loadingContent: "Downloading..."
+          }
+        ),
+        /* @__PURE__ */ jsx5(
+          PrimaryBtn_default,
+          {
+            variant: "primary",
+            type: "button",
+            onClick: () => {
+            },
+            loadingAll: false,
+            icon: "download",
+            content: "Download Documents",
+            loadingContent: "Downloading..."
+          }
+        )
+      ] }) })
+    ] }),
+    /* @__PURE__ */ jsx5("hr", { className: "text-gray-300" }),
+    /* @__PURE__ */ jsx5("div", { className: "bg-white rounded-xl shadow-sm border border-gray-200 pt-6 pb-6 px-6 mb-2", children: /* @__PURE__ */ jsxs5("div", { className: "flex flex-col 2xl:flex-row 2xl:gap-6", children: [
       /* @__PURE__ */ jsxs5("div", { className: "flex flex-col gap-4 2xl:w-auto 2xl:shrink-0", children: [
         /* @__PURE__ */ jsxs5("div", { className: "flex flex-row gap-4 justify-center 2xl:justify-start", children: [
           /* @__PURE__ */ jsxs5("div", { className: "flex flex-col items-center gap-2", children: [
@@ -954,7 +1003,7 @@ var EcFailed = () => {
 };
 
 // src/components/ApplicationDetailsContainer.tsx
-import { Fragment as Fragment4, jsx as jsx6, jsxs as jsxs6 } from "react/jsx-runtime";
+import { Fragment as Fragment3, jsx as jsx6, jsxs as jsxs6 } from "react/jsx-runtime";
 var ApplicationDetailsContainer = ({
   application,
   preloadKey,
@@ -963,7 +1012,7 @@ var ApplicationDetailsContainer = ({
 }) => {
   const nidNo = getNidNo(application?.application_data);
   return /* @__PURE__ */ jsxs6("div", { children: [
-    showTitle && /* @__PURE__ */ jsxs6(Fragment4, { children: [
+    showTitle && /* @__PURE__ */ jsxs6(Fragment3, { children: [
       /* @__PURE__ */ jsx6("div", { className: "flex justify-between items-center mb-6", children: /* @__PURE__ */ jsx6("h1", { className: "text-2xl font-bold", children: title }) }),
       /* @__PURE__ */ jsx6("hr", { className: "text-gray-300 py-2" })
     ] }),
@@ -980,7 +1029,7 @@ var ApplicationDetailsContainer = ({
 var ApplicationDetailsContainer_default = ApplicationDetailsContainer;
 
 // src/components/ApplicationDetails.tsx
-import { Fragment as Fragment5, jsx as jsx7, jsxs as jsxs7 } from "react/jsx-runtime";
+import { Fragment as Fragment4, jsx as jsx7, jsxs as jsxs7 } from "react/jsx-runtime";
 function ApplicationDetails({
   id,
   baseUrl,
@@ -1052,7 +1101,7 @@ function ApplicationDetails({
     callPreloadApi();
   }, [preloadUrl, apiKey]);
   if (loading) return /* @__PURE__ */ jsx7(Loader_default, {});
-  return /* @__PURE__ */ jsxs7(Fragment5, { children: [
+  return /* @__PURE__ */ jsxs7(Fragment4, { children: [
     /* @__PURE__ */ jsx7(
       ApplicationDetailsContainer_default,
       {
@@ -1062,7 +1111,7 @@ function ApplicationDetails({
         showTitle: false
       }
     ),
-    /* @__PURE__ */ jsx7("div", { className: "flex mt-5 justify-end items-center gap-2", children: showActionsBtn ? /* @__PURE__ */ jsxs7(Fragment5, { children: [
+    /* @__PURE__ */ jsx7("div", { className: "flex mt-5 justify-end items-center gap-2", children: showActionsBtn ? /* @__PURE__ */ jsxs7(Fragment4, { children: [
       /* @__PURE__ */ jsx7(
         PrimaryBtn_default,
         {
@@ -1097,9 +1146,9 @@ import { Tooltip } from "antd";
 import { Eye } from "lucide-react";
 
 // src/components/table.tsx
-import { Fragment as Fragment6, jsx as jsx8, jsxs as jsxs8 } from "react/jsx-runtime";
+import { Fragment as Fragment5, jsx as jsx8, jsxs as jsxs8 } from "react/jsx-runtime";
 var Table = ({ columns, dataSource }) => {
-  return /* @__PURE__ */ jsx8(Fragment6, { children: /* @__PURE__ */ jsx8("div", { className: "overflow-auto h-[calc(100vh-285px)] border border-gray-200 rounded-lg", children: /* @__PURE__ */ jsxs8("table", { className: "min-w-full table-auto border-collapse", children: [
+  return /* @__PURE__ */ jsx8(Fragment5, { children: /* @__PURE__ */ jsx8("div", { className: "overflow-auto h-[calc(100vh-285px)] border border-gray-200 rounded-lg", children: /* @__PURE__ */ jsxs8("table", { className: "min-w-full table-auto border-collapse", children: [
     /* @__PURE__ */ jsx8("thead", { className: "text-gray-400 sticky top-0 bg-white z-10", children: /* @__PURE__ */ jsx8("tr", { children: columns.map((heading, index) => /* @__PURE__ */ jsx8(
       "th",
       {
@@ -1840,7 +1889,7 @@ var selectStyles = {
 };
 
 // src/components/ApplicationSection.tsx
-import { Fragment as Fragment7, jsx as jsx16, jsxs as jsxs13 } from "react/jsx-runtime";
+import { Fragment as Fragment6, jsx as jsx16, jsxs as jsxs13 } from "react/jsx-runtime";
 var ApplicationSection = ({ apiKey, url }) => {
   const [currentPage, setCurrentPage] = useState6(1);
   const {
@@ -2004,7 +2053,7 @@ var ApplicationSection = ({ apiKey, url }) => {
       /* @__PURE__ */ jsx16("p", { className: "text-red-500 font-medium", children: "Failed to load applications." }),
       /* @__PURE__ */ jsx16("p", { className: "text-gray-500 mt-1", children: "Please try again later or contact support." })
     ] }),
-    !loading && !error && applications?.data && /* @__PURE__ */ jsx16(Fragment7, { children: (applications?.data ?? []).length > 0 ? /* @__PURE__ */ jsxs13(Fragment7, { children: [
+    !loading && !error && applications?.data && /* @__PURE__ */ jsx16(Fragment6, { children: (applications?.data ?? []).length > 0 ? /* @__PURE__ */ jsxs13(Fragment6, { children: [
       /* @__PURE__ */ jsx16(
         ApplicationTable_default,
         {

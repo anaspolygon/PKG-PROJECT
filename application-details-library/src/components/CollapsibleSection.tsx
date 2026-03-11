@@ -13,6 +13,7 @@ import {
   getApplicationStatus,
 } from "../types/constants";
 import { CircleCheckBig, CircleX } from "lucide-react";
+import PrimaryBtn from "./PrimaryBtn";
 
 export interface CollapsibleSectionsContainerProps {
   application: ApplicationDetailsRoot;
@@ -125,7 +126,35 @@ const CollapsibleSectionsContainer: React.FC<
 
   return (
     <>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-2">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Application Details</h1>
+        <div className="flex items-center gap-4">
+          <>
+            <PrimaryBtn
+              variant="secondary"
+              type="button"
+              onClick={() => {}}
+              loadingAll={false}
+              icon="download"
+              content="Download PDF"
+              loadingContent="Downloading..."
+            />
+
+            <PrimaryBtn
+              variant="primary"
+              type="button"
+              onClick={() => {}}
+              loadingAll={false}
+              icon="download"
+              content="Download Documents"
+              loadingContent="Downloading..."
+            />
+          </>
+        </div>
+      </div>
+
+      <hr className="text-gray-300" />
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 pt-6 pb-6 px-6 mb-2">
         {/* <div className="flex flex-col lg:flex-row gap-6 w-full">
           <div className="flex flex-col gap-4">
             <div className="flex gap-4">

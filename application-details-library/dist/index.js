@@ -149,47 +149,64 @@ var PrimaryBtn = ({
   type,
   disabled
 }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_jsx_runtime2.Fragment, { children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+  return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
     "button",
     {
       type: type || "button",
       onClick: type !== "submit" ? onClick : void 0,
       disabled: loadingAll || disabled,
       className: (0, import_classnames.default)(
-        "flex sm:text-sm  items-center gap-2 text-center  justify-center",
+        "flex sm:text-sm items-center gap-2 text-center justify-center sm:px-2 sm:py-2 md:px-3 md:py-2 lg:px-3 lg:py-2 rounded-sm font-medium transition-all duration-300 ease-in-out",
         {
           // Secondary variant - enabled
-          "border border-primary text-primary hover:text-white bg-white hover:bg-primary cursor-pointer": variant === "secondary" && !loadingAll && !disabled,
+          "border border-[#ed1c24] text-[#ed1c24] hover:text-white bg-white hover:bg-[#ed1c24] cursor-pointer": variant === "secondary" && !loadingAll && !disabled,
           // Secondary variant - disabled/loading
-          "border border-gray-300 text-gray-400 bg-gray-100 cursor-not-allowed": variant === "secondary" && (loadingAll || disabled),
+          "border border-[#d1d5db] text-[#9ca3af] bg-[#f3f4f6] cursor-not-allowed": variant === "secondary" && (loadingAll || disabled),
           // Success variant - enabled
-          "text-green-500 bg-green-100 hover:bg-green-500 hover:text-white  transform cursor-pointer transition-all duration-300 ease-in-out": variant === "success" && !loadingAll && !disabled,
+          "text-[#22c55e] bg-[#dcfce7] hover:bg-[#22c55e] hover:text-white cursor-pointer": variant === "success" && !loadingAll && !disabled,
           // Success variant - disabled/loading
-          "text-green-500 bg-green-100 cursor-not-allowed": variant === "success" && (loadingAll || disabled),
+          "text-[#22c55e] bg-[#dcfce7] cursor-not-allowed opacity-60": variant === "success" && (loadingAll || disabled),
           // Primary variant - enabled
-          "text-white bg-primary hover:bg-red-700 cursor-pointer": (variant === "primary" || !variant) && !loadingAll && !disabled,
+          "text-white bg-[#ed1c24] hover:bg-[#c0141b] cursor-pointer": (variant === "primary" || !variant) && !loadingAll && !disabled,
           // Primary variant - disabled/loading
-          "text-white bg-gray-400 cursor-not-allowed": (variant === "primary" || !variant) && (loadingAll || disabled),
-          "text-red-500 bg-red-100 hover:bg-red-500 hover:text-white  transform cursor-pointer transition-all duration-300 ease-in-out": (variant === "danger" || !variant) && !loadingAll && !disabled,
-          "text-red-500 bg-red-100 transform cursor-not-allowed": (variant === "danger" || !variant) && !loadingAll && disabled
-        },
-        "sm:px-2 sm:py-2 md:px-3 md:py-2 lg:px-3 lg:py-2 rounded-sm font-medium transition-all duration-300 ease-in-out"
+          "text-white bg-[#9ca3af] cursor-not-allowed": (variant === "primary" || !variant) && (loadingAll || disabled),
+          // Danger variant - enabled
+          "text-[#ef4444] bg-[#fee2e2] hover:bg-[#ef4444] hover:text-white cursor-pointer": variant === "danger" && !loadingAll && !disabled,
+          // Danger variant - disabled
+          "text-[#ef4444] bg-[#fee2e2] cursor-not-allowed opacity-60": variant === "danger" && (loadingAll || disabled)
+        }
       ),
       title: content,
       children: [
-        icon === "download" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_lucide_react.Download, { size: 16 }),
-        icon === "plus" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_lucide_react.Plus, { size: 16 }),
-        icon === "upload" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_lucide_react.Upload, { size: 16 }),
-        icon === "retry" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-          import_lucide_react.RefreshCw,
-          {
-            className: `w-4 h-4 ${loadingAll ? "animate-spin" : ""}`
-          }
-        ),
+        loadingAll && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("svg", { className: "w-4 h-4 animate-spin", fill: "none", viewBox: "0 0 24 24", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+            "circle",
+            {
+              className: "opacity-25",
+              cx: "12",
+              cy: "12",
+              r: "10",
+              stroke: "currentColor",
+              strokeWidth: "4"
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+            "path",
+            {
+              className: "opacity-75",
+              fill: "currentColor",
+              d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+            }
+          )
+        ] }),
+        !loadingAll && icon === "download" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_lucide_react.Download, { size: 16 }),
+        !loadingAll && icon === "plus" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_lucide_react.Plus, { size: 16 }),
+        !loadingAll && icon === "upload" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_lucide_react.Upload, { size: 16 }),
+        !loadingAll && icon === "retry" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_lucide_react.RefreshCw, { className: "w-4 h-4" }),
         loadingAll ? loadingContent : content
       ]
     }
-  ) });
+  );
 };
 var PrimaryBtn_default = PrimaryBtn;
 
@@ -622,7 +639,39 @@ var CollapsibleSectionsContainer = ({ application, preloadKey }) => {
     return value ? value.split("_").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ") : null;
   };
   return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-2", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex flex-col 2xl:flex-row 2xl:gap-6", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex justify-between items-center", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h1", { className: "text-2xl font-bold", children: "Application Details" }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "flex items-center gap-4", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          PrimaryBtn_default,
+          {
+            variant: "secondary",
+            type: "button",
+            onClick: () => {
+            },
+            loadingAll: false,
+            icon: "download",
+            content: "Download PDF",
+            loadingContent: "Downloading..."
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          PrimaryBtn_default,
+          {
+            variant: "primary",
+            type: "button",
+            onClick: () => {
+            },
+            loadingAll: false,
+            icon: "download",
+            content: "Download Documents",
+            loadingContent: "Downloading..."
+          }
+        )
+      ] }) })
+    ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("hr", { className: "text-gray-300" }),
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bg-white rounded-xl shadow-sm border border-gray-200 pt-6 pb-6 px-6 mb-2", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex flex-col 2xl:flex-row 2xl:gap-6", children: [
       /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex flex-col gap-4 2xl:w-auto 2xl:shrink-0", children: [
         /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex flex-row gap-4 justify-center 2xl:justify-start", children: [
           /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex flex-col items-center gap-2", children: [
